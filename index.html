@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 회의실 v7</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #0c0d11;
+  --bg2:   #11131a;
+  --bg3:   #171923;
+  --bg4:   #1d2030;
+  --line:  rgba(255,255,255,0.06);
+  --line2: rgba(255,255,255,0.11);
+  --t1:    #dde1f0;
+  --t2:    #7880a0;
+  --t3:    #3a3f5c;
+
+  --cl: #e07a50; --cl-d: rgba(224,122,80,0.10); --cl-b: rgba(224,122,80,0.25);
+  --gm: #4f91f5; --gm-d: rgba(79,145,245,0.10); --gm-b: rgba(79,145,245,0.25);
+  --gp: #38c97e; --gp-d: rgba(56,201,126,0.10); --gp-b: rgba(56,201,126,0.25);
+  --px: #a87ef0; --px-d: rgba(168,126,240,0.10); --px-b: rgba(168,126,240,0.25);
+
+  --r: 10px; --rl: 14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;line-height:1.6}
+.shell{display:grid;grid-template-columns:310px 1fr;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sb{background:var(--bg2);border-right:1px solid var(--line);padding:20px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo{display:flex;align-items:center;gap:10px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--cl),var(--px));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.logo-title{font-size:14px;font-weight:700;letter-spacing:-.02em}
+.logo-sub{font-size:10px;color:var(--t3);margin-top:1px}
+
+.slabel{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;color:var(--t2);margin-bottom:3px}
+.field input,.field select,.field textarea{width:100%;background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);color:var(--t1);font-family:'Noto Sans KR',sans-serif;font-size:12px;padding:7px 10px;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--line2)}
+.field textarea{min-height:60px;resize:vertical}
+.field select option{background:var(--bg3)}
+
+/* Preset chips */
+.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.preset-chip{padding:6px 8px;background:var(--bg3);border:1px solid var(--line);border-radius:8px;font-size:11px;color:var(--t2);cursor:pointer;text-align:center;transition:all .15s;line-height:1.3}
+.preset-chip:hover{border-color:var(--line2);color:var(--t1)}
+.preset-chip.active{background:rgba(79,145,245,.1);border-color:var(--gm-b);color:var(--gm)}
+
+/* AI toggles */
+.ai-toggles{display:flex;flex-direction:column;gap:5px}
+.ai-tog{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);cursor:pointer;user-select:none;transition:all .15s}
+.ai-tog input{display:none}
+.ai-tog.on{border-color:var(--tc,var(--line2));background:var(--td,var(--bg4))}
+.ai-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;opacity:.3;transition:opacity .2s}
+.ai-tog.on .ai-dot{opacity:1}
+.ai-name{font-size:12px;font-weight:600;flex:1}
+.ai-sub{font-size:10px;color:var(--t3)}
+.ai-ck{font-size:10px;opacity:0;transition:opacity .2s}
+.ai-tog.on .ai-ck{opacity:1}
+
+.rounds-row{display:flex;gap:6px}
+.rb{flex:1;padding:7px 0;background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);color:var(--t2);font-family:'Noto Sans KR',sans-serif;font-size:12px;cursor:pointer;transition:all .15s;text-align:center}
+.rb.on{background:var(--gm-d);border-color:var(--gm-b);color:var(--gm)}
+
+.go-btn{width:100%;padding:11px;background:linear-gradient(135deg,var(--cl),var(--px));border:none;border-radius:var(--r);color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:-.01em;transition:opacity .2s,transform .1s}
+.go-btn:hover{opacity:.88}
+.go-btn:active{transform:scale(.98)}
+.save-row{display:flex;gap:6px}
+.sv-btn{flex:1;padding:7px;background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);color:var(--t2);font-size:11px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px}
+.sv-btn:hover{background:var(--line);color:var(--t1)}
+.sv-btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* ── MAIN ── */
+.main{display:flex;flex-direction:column;padding:28px 30px;gap:0;overflow-y:auto}
+
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--t3);text-align:center;padding:80px 0}
+.empty-ico{font-size:48px;opacity:.28}
+.empty-title{font-size:15px;color:var(--t2)}
+.empty-sub{font-size:12px;line-height:1.65;max-width:340px}
+
+/* Progress */
+.pbar{height:2px;background:var(--line);border-radius:2px;margin-bottom:22px;overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--cl),var(--gm),var(--gp),var(--px));border-radius:2px;transition:width .4s ease}
+
+/* Round header */
+.rh{display:flex;align-items:center;gap:10px;padding:16px 0 12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.rh-num{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;color:var(--t3);letter-spacing:.1em}
+.rh-title{font-size:14px;font-weight:700}
+.rh-desc{font-size:11px;color:var(--t2);margin-left:auto}
+
+/* Step card */
+.sc{background:var(--bg2);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:8px;transition:border-color .25s}
+.sc.cur{border-color:var(--line2)}
+.sc.done{opacity:.65}
+.sc-head{display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid var(--line)}
+.ai-badge{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;flex-shrink:0}
+.sc-lbl{font-size:12px;color:var(--t2);flex:1}
+.sc-st{font-size:10px;padding:2px 8px;border-radius:10px;font-family:'JetBrains Mono',monospace;flex-shrink:0}
+.sc-st.w{background:var(--bg4);color:var(--t3)}
+.sc-st.c{background:rgba(79,145,245,.15);color:var(--gm)}
+.sc-st.d{background:rgba(56,201,126,.12);color:var(--gp)}
+
+.sc-body{padding:14px;display:flex;flex-direction:column;gap:10px}
+.mini-label{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.prompt-box{background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);padding:11px 13px;font-size:12px;line-height:1.75;color:var(--t2);white-space:pre-wrap;word-break:break-word;max-height:200px;overflow-y:auto}
+.btn-row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.cp-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;background:var(--bg4);border:1px solid var(--line2);border-radius:8px;color:var(--t1);font-size:12px;cursor:pointer;transition:all .15s}
+.cp-btn:hover{background:var(--line);border-color:var(--line2)}
+.cp-btn.ok{background:var(--gp-d);border-color:var(--gp-b);color:var(--gp)}
+.open-link{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:600;text-decoration:none;border:1px solid transparent;transition:opacity .15s}
+.open-link:hover{opacity:.75}
+.ta-wrap{display:flex;flex-direction:column;gap:6px}
+.res-ta{width:100%;background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);color:var(--t1);font-family:'Noto Sans KR',sans-serif;font-size:12px;line-height:1.75;padding:9px 11px;min-height:90px;resize:vertical;outline:none;transition:border-color .2s}
+.res-ta:focus{border-color:var(--line2)}
+.res-ta::placeholder{color:var(--t3)}
+.ok-btn{padding:8px 18px;border:none;border-radius:var(--r);font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;align-self:flex-end}
+.ok-btn:hover{opacity:.82}
+.ok-btn:active{transform:scale(.97)}
+.saved-box{background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;font-size:12px;line-height:1.8;color:var(--t2);white-space:pre-wrap;word-break:break-word;max-height:160px;overflow-y:auto}
+.conn{width:2px;height:14px;background:var(--line);margin:0 auto 0 22px}
+
+/* Score card (신뢰도) */
+.score-card{background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);padding:11px 13px}
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.score-item{display:flex;flex-direction:column;gap:4px}
+.score-name{font-size:10px;color:var(--t2)}
+.score-bar-wrap{height:4px;background:var(--bg4);border-radius:4px;overflow:hidden}
+.score-bar{height:100%;border-radius:4px;transition:width .6s ease}
+.score-val{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--t1)}
+
+/* Consensus meter */
+.consensus-box{background:var(--bg2);border:1px solid var(--line2);border-radius:var(--rl);padding:18px 20px;margin-bottom:14px}
+.consensus-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.consensus-title{font-size:13px;font-weight:700}
+.consensus-pct{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--gp)}
+.consensus-bar-wrap{height:6px;background:var(--bg4);border-radius:6px;overflow:hidden;margin-bottom:12px}
+.consensus-bar{height:100%;background:linear-gradient(90deg,var(--gm),var(--gp));border-radius:6px;transition:width .8s ease}
+.consensus-tags{display:flex;flex-wrap:wrap;gap:6px}
+.con-tag{padding:4px 10px;border-radius:20px;font-size:11px}
+.con-tag.agree{background:var(--gp-d);border:1px solid var(--gp-b);color:var(--gp)}
+.con-tag.partial{background:var(--gm-d);border:1px solid var(--gm-b);color:var(--gm)}
+.con-tag.disagree{background:var(--cl-d);border:1px solid var(--cl-b);color:var(--cl)}
+
+/* Final action card */
+.final-wrap{display:flex;flex-direction:column;gap:10px}
+.final-card{background:var(--bg2);border:1px solid var(--line2);border-radius:var(--rl);overflow:hidden}
+.final-head{padding:13px 18px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
+.final-dot{width:6px;height:6px;border-radius:50%;background:var(--gp)}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+.action-item{background:var(--bg2);padding:14px 17px}
+.action-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);margin-bottom:5px}
+.action-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px}
+.action-body{font-size:12px;color:var(--t2);line-height:1.75;white-space:pre-wrap}
+
+
+
+.go-btn.secondary{background:var(--bg3);border:1px solid var(--line2);color:var(--t1)}
+.go-btn.secondary:hover{background:var(--bg4);opacity:1}
+.batch-panel{background:var(--bg2);border:1px solid var(--line2);border-radius:var(--rl);padding:16px;margin-bottom:16px}
+.batch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+.batch-box{background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);padding:10px}
+.batch-box-title{font-size:11px;font-weight:700;margin-bottom:6px}
+.batch-box textarea{width:100%;min-height:120px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;color:var(--t1);padding:8px;font-family:'Noto Sans KR',sans-serif;font-size:12px;resize:vertical}
+.batch-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.small-btn{padding:7px 12px;background:var(--bg4);border:1px solid var(--line2);border-radius:8px;color:var(--t1);font-size:12px;cursor:pointer}
+.small-btn:hover{background:var(--line)}
+.disagree-panel{background:linear-gradient(135deg,rgba(224,122,80,.08),rgba(168,126,240,.06));border:1px solid var(--cl-b);border-radius:var(--rl);padding:16px;margin-bottom:16px}
+.disagree-panel textarea{width:100%;min-height:76px;background:var(--bg3);border:1px solid var(--line);border-radius:8px;color:var(--t1);padding:9px;font-family:'Noto Sans KR',sans-serif;font-size:12px;resize:vertical;margin-top:8px}
+
+.word-meta{font-size:10px;color:var(--t3);display:flex;justify-content:space-between;margin-top:4px}
+.collapse-btn{margin-left:auto;background:none;border:none;color:var(--t3);cursor:pointer;font-size:11px}
+.sc.collapsed .sc-body{display:none}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--line2);padding:10px 14px;border-radius:10px;font-size:12px;color:var(--t1);z-index:9999;opacity:0;transform:translateY(10px);transition:all .25s}
+.toast.show{opacity:1;transform:translateY(0)}
+
+.hidden{display:none!important}
+
+/* ── 파일 첨부 ── */
+.file-drop-zone{border:1px dashed var(--line2);border-radius:var(--r);padding:10px 12px;text-align:center;font-size:11px;color:var(--t2);cursor:pointer;transition:all .2s;background:var(--bg3);display:flex;align-items:center;justify-content:center;gap:6px;min-height:46px}
+.file-drop-zone:hover,.file-drop-zone.drag-over{border-color:var(--gm-b);background:var(--gm-d);color:var(--gm)}
+.file-chips{display:flex;flex-direction:column;gap:5px;margin-top:6px;max-height:220px;overflow-y:auto}
+.file-chip-wrap{background:var(--bg4);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.file-chip{display:flex;align-items:center;gap:7px;padding:6px 8px}
+.file-chip-thumb{width:28px;height:28px;border-radius:4px;object-fit:cover;flex-shrink:0}
+.file-chip-icon{font-size:15px;flex-shrink:0;width:28px;text-align:center}
+.file-chip-info{flex:1;min-width:0}
+.file-chip-name{font-size:11px;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-chip-meta{font-size:9px;color:var(--t3);margin-top:1px}
+.file-chip-rm{background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;padding:0 3px;flex-shrink:0;line-height:1;transition:color .15s}
+.file-chip-rm:hover{color:var(--cl)}
+.img-desc-area{padding:0 8px 7px;border-top:1px solid var(--line)}
+.img-desc-area label{font-size:9px;color:var(--t3);display:block;margin-bottom:3px;margin-top:5px;text-transform:uppercase;letter-spacing:.08em}
+.img-desc-inp{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:5px;color:var(--t1);font-family:'Noto Sans KR',sans-serif;font-size:11px;padding:5px 7px;resize:none;min-height:40px;outline:none;transition:border-color .2s}
+.img-desc-inp:focus{border-color:var(--line2)}
+.img-desc-inp::placeholder{color:var(--t3)}
+.file-status-tag{display:inline-block;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700}
+.fst-ok{background:var(--gp-d);color:var(--gp);border:1px solid var(--gp-b)}
+.fst-img{background:var(--gm-d);color:var(--gm);border:1px solid var(--gm-b)}
+.fst-proc{background:var(--px-d);color:var(--px);border:1px solid var(--px-b)}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:10px}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sb">
+  <div class="logo">
+    <div class="logo-mark">🏛</div>
+    <div>
+      <div class="logo-title">AI 회의실 v7</div>
+      <div class="logo-sub">집단지성 의사결정 시스템 · Disagreement Loop Edition</div>
+    </div>
+  </div>
+
+  <!-- 프리셋 -->
+  <div>
+    <div class="slabel">회의 타입</div>
+    <div class="preset-grid" id="presetGrid">
+      <div class="preset-chip active" data-preset="invest" onclick="setPreset(this)">📈 투자 판단<br><span style="font-size:9px;color:var(--t3)">종목·포트 검토</span></div>
+      <div class="preset-chip" data-preset="policy" onclick="setPreset(this)">📋 정책 검토<br><span style="font-size:9px;color:var(--t3)">교육·제도 분석</span></div>
+      <div class="preset-chip" data-preset="setech" onclick="setPreset(this)">📝 세특 리라이팅<br><span style="font-size:9px;color:var(--t3)">세특 비판·수정</span></div>
+      <div class="preset-chip" data-preset="research" onclick="setPreset(this)">🔬 탐구활동 설계<br><span style="font-size:9px;color:var(--t3)">활동 생성</span></div>
+      <div class="preset-chip" data-preset="prompt" onclick="setPreset(this)">⚡ 프롬프트 개선<br><span style="font-size:9px;color:var(--t3)">명령어 비판</span></div>
+      <div class="preset-chip" data-preset="program" onclick="setPreset(this)">💻 프로그램 개선<br><span style="font-size:9px;color:var(--t3)">코드·UX·기능 검토</span></div>
+      <div class="preset-chip" data-preset="present" onclick="setPreset(this)">🎤 설명회 자료<br><span style="font-size:9px;color:var(--t3)">학부모 설득</span></div>
+    </div>
+  </div>
+
+  <!-- 주제 -->
+  <div>
+    <div class="slabel">주제</div>
+    <div class="field">
+      <label>질문 / 주제</label>
+      <input type="text" id="topic" placeholder="예: 삼성전자 비중을 30%로 늘려야 하는가?"/>
+    </div>
+    <div class="field">
+      <label>배경 자료 (선택)</label>
+      <textarea id="context" placeholder="포트폴리오, 조건, 데이터 등"></textarea>
+    </div>
+    <div class="field">
+      <label>📎 파일 / 이미지 첨부</label>
+      <label class="file-drop-zone" id="fileDropZone" for="fileAttachInput" tabindex="0" role="button" aria-label="파일 또는 이미지 첨부">
+        <span>📎</span>
+        <div>클릭 또는 드래그하여 첨부<br><span style="font-size:10px;color:var(--t3)">TXT · MD · CSV · JSON · PDF · JPG · PNG 등</span></div>
+      </label>
+      <input type="file" id="fileAttachInput" multiple accept=".txt,.md,.csv,.json,.pdf,.html,.js,.py,.xml,.log,image/*" onchange="_handleFileInputChange(event)" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+      <div class="file-chips" id="fileChips"></div>
+    </div>
+  </div>
+
+  <!-- AI 선택 -->
+  <div>
+    <div class="slabel">참여 AI</div>
+    <div class="ai-toggles">
+      <label class="ai-tog on" data-id="claude" style="--tc:var(--cl-b);--td:var(--cl-d)">
+        <input type="checkbox" checked>
+        <div class="ai-dot" style="background:var(--cl)"></div>
+        <div><div class="ai-name" style="color:var(--cl)">Claude</div><div class="ai-sub">장기 리스크 감시자</div></div>
+        <span class="ai-ck" style="color:var(--cl)">✓</span>
+      </label>
+      <label class="ai-tog on" data-id="gemini" style="--tc:var(--gm-b);--td:var(--gm-d)">
+        <input type="checkbox" checked>
+        <div class="ai-dot" style="background:var(--gm)"></div>
+        <div><div class="ai-name" style="color:var(--gm)">Gemini</div><div class="ai-sub">정량 분석·밸류 검증</div></div>
+        <span class="ai-ck" style="color:var(--gm)">✓</span>
+      </label>
+      <label class="ai-tog on" data-id="gpt" style="--tc:var(--gp-b);--td:var(--gp-d)">
+        <input type="checkbox" checked>
+        <div class="ai-dot" style="background:var(--gp)"></div>
+        <div><div class="ai-name" style="color:var(--gp)">GPT</div><div class="ai-sub">현실 실행 전략가</div></div>
+        <span class="ai-ck" style="color:var(--gp)">✓</span>
+      </label>
+      <label class="ai-tog on" data-id="perplexity" style="--tc:var(--px-b);--td:var(--px-d)">
+        <input type="checkbox" checked>
+        <div class="ai-dot" style="background:var(--px)"></div>
+        <div><div class="ai-name" style="color:var(--px)">Perplexity</div><div class="ai-sub">최신 사례·반례 수집가</div></div>
+        <span class="ai-ck" style="color:var(--px)">✓</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- 라운드 -->
+  <div>
+    <div class="slabel">라운드</div>
+    <div class="rounds-row">
+      <button class="rb" onclick="setR(2,this)">2라운드</button>
+      <button class="rb on" onclick="setR(3,this)">3라운드</button>
+    </div>
+  </div>
+
+  <div style="margin-top:auto;display:flex;flex-direction:column;gap:7px">
+    <button class="go-btn" onclick="start()">🚀 토론 시작</button>
+    <button class="go-btn secondary" onclick="startDisagreementLoop()">🔁 불일치 항목 추가 토론</button>
+    <button class="go-btn secondary" onclick="showBatchPanel()">📦 라운드 일괄 입력</button>
+    <div class="save-row">
+      <button class="sv-btn" id="svMd" onclick="saveMD()" disabled>⬇ MD</button>
+      <button class="sv-btn" id="svHtml" onclick="saveHTML()" disabled>⬇ HTML</button>
+      <button class="sv-btn" onclick="exportSession()">⬇ 세션</button>
+      <button class="sv-btn" onclick="importSession()">⬆ 불러오기</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main class="main" id="mainArea">
+  <div class="empty" id="emptyState">
+    <div class="empty-ico">🏛</div>
+    <div class="empty-title">다중 AI 집단지성 의사결정 시스템</div>
+    <div class="empty-sub">
+      프리셋 선택 → 주제 입력 → 토론 시작<br>
+      각 AI 프롬프트를 복사해 붙여넣으면<br>
+      신뢰도 점수 · 합의율 · 실행안을 자동 생성합니다
+    </div>
+  </div>
+
+  <div class="hidden" id="flowArea">
+    <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
+    <div id="batchPanel" class="hidden"></div>
+    <div id="flowContent"></div>
+    <!-- 합의율 + 최종 -->
+    <div class="hidden" id="finalArea">
+      <div class="consensus-box" id="consensusBox"></div>
+      <div class="final-wrap">
+        <div class="final-card">
+          <div class="final-head"><div class="final-dot"></div>실전 판단 요약</div>
+          <div class="action-grid" id="actionGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+<input type="file" id="sessionFile" accept=".json" style="display:none">
+</main>
+</div>
+
+<script>
+// ── 설정 ──
+
+window.addEventListener('error', function(e){
+  try { console.error(e.error || e.message); showToast('스크립트 오류: ' + (e.message || '확인 필요')); } catch(_) {}
+});
+
+const AI = {
+  claude:     { name:'Claude',     emoji:'🟠', color:'var(--cl)', dim:'var(--cl-d)', bdr:'var(--cl-b)', url:'https://claude.ai',        role:'장기 시스템·리스크 감시자. 실행보다 "이 결정이 5년 후에도 옳은가"를 묻는다. 과도한 낙관·확신을 경계한다.' },
+  gemini:     { name:'Gemini',     emoji:'🔵', color:'var(--gm)', dim:'var(--gm-d)', bdr:'var(--gm-b)', url:'https://gemini.google.com', role:'정량 분석·밸류 검증자. 수치로 말하고 데이터 없는 주장은 인정하지 않는다. 감이 아닌 계산으로 검증한다.' },
+  gpt:        { name:'GPT',        emoji:'🟢', color:'var(--gp)', dim:'var(--gp-d)', bdr:'var(--gp-b)', url:'https://chatgpt.com',       role:'현실 실행 전략가. "어떻게 할 것인가"만 묻는다. 이론·원칙보다 지금 당장 실행 가능한 액션플랜을 제시한다.' },
+  perplexity: { name:'Perplexity', emoji:'🟣', color:'var(--px)', dim:'var(--px-d)', bdr:'var(--px-b)', url:'https://perplexity.ai',     role:'최신 사례·반례 수집가. 다른 AI들의 주장 중 outdated 정보·사실 오류를 최신 데이터로 반박한다. 출처 명시.' },
+};
+
+const PRESETS = {
+  invest:  { label:'투자 판단',       hint:'종목명, 현재 보유 비중, 포트폴리오 상황 등을 배경 자료에 입력하세요.' },
+  policy:  { label:'정책 검토',       hint:'정책 원문 또는 핵심 내용을 배경 자료에 붙여넣으세요.' },
+  setech:  { label:'세특 리라이팅',   hint:'현재 세특 초안을 배경 자료에 붙여넣으세요.' },
+  research:{ label:'탐구활동 설계',   hint:'과목명, 관심 분야, 목표 역량을 배경 자료에 입력하세요.' },
+  prompt:  { label:'프롬프트 개선',   hint:'개선하려는 프롬프트를 배경 자료에 붙여넣으세요.' },
+  program: { label:'프로그램 개선',   hint:'HTML/JS 코드, 기능 설명, 오류 상황, 원하는 개선 방향을 붙여넣으세요.' },
+  present: { label:'설명회 자료',     hint:'설명회 대상, 핵심 메시지, 우려 사항을 배경 자료에 입력하세요.' },
+};
+
+let activePreset = 'invest';
+let rounds = 3;
+let selectedAIs = ['claude','gemini','gpt','perplexity'];
+let steps = [];
+let results = {}; // aiId → { r1, r2, r3, score }
+let finalData = {};
+let topic = '', ctx = '';
+const STORAGE_KEY = 'ai_meeting_v7';
+
+// ── UI 이벤트 ──
+function setPreset(el) {
+  document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  activePreset = el.dataset.preset;
+  const p = PRESETS[activePreset];
+  document.getElementById('context').placeholder = p.hint;
+}
+function setR(n, btn) {
+  rounds = n;
+  document.querySelectorAll('.rb').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+document.querySelectorAll('.ai-tog').forEach(lbl => {
+  lbl.addEventListener('click', e => {
+    // label 기본 동작과 수동 토글이 겹치면 체크 상태와 화면 표시가 어긋날 수 있어 기본 동작을 차단한다.
+    e.preventDefault();
+    const cb = lbl.querySelector('input');
+    cb.checked = !cb.checked;
+    lbl.classList.toggle('on', cb.checked);
+    selectedAIs = [...document.querySelectorAll('.ai-tog.on')].map(l => l.dataset.id);
+  });
+});
+
+// ── 프롬프트 생성 ──
+const PRESET_CONTEXT = {
+  invest:   '투자 분석',
+  policy:   '정책 검토',
+  setech:   '세특 리라이팅',
+  research: '탐구활동 설계',
+  prompt:   '프롬프트 개선',
+  program:  '프로그램/코드 개선',
+  present:  '설명회 자료 작성',
+};
+
+function getProgramNote() {
+  return activePreset === 'program'
+    ? '\n💻 프로그램 개선 모드 특수 지침: 기능 누락, UX 병목, 코드 안정성, 저장/복원, 오류 가능성, 다음 버전 우선순위를 반드시 점검하세요. 코드 수정 아이디어는 실행 가능한 단위로 제시하세요.'
+    : '';
+}
+
+function pr1(aiId) {
+  const a = AI[aiId];
+  const mode = PRESET_CONTEXT[activePreset];
+  const perplexNote = aiId === 'perplexity'
+    ? '\n⚡ 당신의 특수 임무: 최신 기사·데이터·실적 기준으로 분석하고, 사용한 정보의 출처(연도 포함)를 반드시 명시하세요. outdated 정보 사용 시 스스로 경고하세요.'
+    : '';
+  const programNote = getProgramNote();
+  return `당신은 "${a.name}" AI입니다.
+역할: ${a.role}${perplexNote}${programNote}
+
+[회의 유형] ${mode}
+[주제] ${topic}
+${ctx ? '[배경 자료]\n' + ctx + '\n' : ''}
+━━ 지침 ━━
+• 다른 AI의 의견을 보지 않은 상태에서 독립적으로 분석
+• 핵심 주장 2~3가지 + 근거 + 주요 우려/기회 → 300자 이내
+• 마지막에 반드시 아래 형식으로 자기 평가를 추가:
+
+[신뢰도 자가평가]
+근거강도: X/10
+실행가능성: X/10
+장기지속성: X/10
+과신위험: X/10`;
+}
+
+function pr2(aiId) {
+  const a = AI[aiId];
+  const mode = PRESET_CONTEXT[activePreset];
+  const others = selectedAIs.filter(id=>id!==aiId)
+    .map(id=>`[${AI[id].name}의 분석]\n${results[id]?.r1||'(미입력)'}`)
+    .join('\n\n');
+  const perplexNote = aiId === 'perplexity'
+    ? '\n⚡ 당신의 특수 임무: 다른 AI들의 주장 중 사실 오류·outdated 정보를 최신 자료로 구체적으로 반박하세요. 단순 의견 비판이 아닌 팩트체크 중심으로.'
+    : '';
+  const programNote = getProgramNote();
+  return `당신은 "${a.name}" AI입니다.
+역할: ${a.role}${perplexNote}${programNote}
+
+[회의 유형] ${mode} / [주제] ${topic}
+
+━━ 다른 AI들의 Round 1 분석 ━━
+${others}
+
+━━ 비판 지침 (칭찬 금지, 반드시 4항목 모두 작성) ━━
+1. 틀렸거나 과장된 사실 (구체적 근거 포함)
+2. 누락된 리스크
+3. 실행 불가능한 부분
+4. 더 나은 대안
+
+200자 이내. 마지막에 [신뢰도 자가평가] 동일 형식으로 추가.`;
+}
+
+function pr3(aiId) {
+  const a = AI[aiId];
+  const mode = PRESET_CONTEXT[activePreset];
+  const myCrit = results[aiId]?.r2 || '';
+  const onMe = selectedAIs.filter(id=>id!==aiId)
+    .map(id=>`[${AI[id].name}의 비판]\n${results[id]?.r2||'(미입력)'}`)
+    .join('\n\n');
+  return `당신은 "${a.name}" AI입니다.
+역할: ${a.role}
+
+[주제] ${topic}
+
+${myCrit?'[내가 한 비판]\n'+myCrit+'\n\n':''}${onMe?'[나에 대한 비판]\n'+onMe+'\n\n':''}━━ 수정안 지침 ━━
+• 타당한 비판은 수용, 옳은 입장은 유지
+• 입장 변경 시 이유 명시
+• 200자 이내
+
+마지막에 [신뢰도 자가평가] 동일 형식으로 추가.`;
+}
+
+function prFinal() {
+  const nonFinalRounds = steps.filter(s => !s.isFinal).map(s => s.round);
+  const maxRound = nonFinalRounds.length ? Math.max(...nonFinalRounds) : rounds;
+  const lastKey = 'r' + maxRound;
+  const all = selectedAIs.map(id =>
+    `[${AI[id].name} — ${AI[id].role.split('.')[0]}]\n${results[id]?.[lastKey]||results[id]?.r1||'(미입력)'}`
+  ).join('\n\n');
+
+  return `아래는 "${topic}"에 대한 ${selectedAIs.length}개 AI의 최종 의견입니다.
+[회의 유형] ${PRESET_CONTEXT[activePreset]}
+
+${all}
+
+━━━━━━━━━━━━━━━━━━━━
+아래 6개 항목을 정확히 이 형식으로만 출력하세요. 각 항목 2~3문장.
+
+[지금당장]
+(즉시 실행해야 할 구체적 행동)
+
+[하지말것]
+(반드시 피해야 할 행동)
+
+[확신영역]
+(AI들이 강하게 동의한 내용)
+
+[불확실영역]
+(아직 모르거나 AI들이 불일치한 부분)
+
+[재검토시점]
+(다음에 다시 판단해야 할 조건·시기)
+
+[합의율분석]
+(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX%)
+
+[다음버전개선]
+(프로그램·프롬프트·문서 개선이 필요한 경우, 다음 버전에 반영할 수정사항 3~5개. 해당 없으면 '없음')`;
+}
+
+// ── 신뢰도 파싱 ──
+function parseScore(text) {
+  const s = { 근거강도:null, 실행가능성:null, 장기지속성:null, 과신위험:null };
+  const map = { '근거강도':'근거강도','실행가능성':'실행가능성','장기지속성':'장기지속성','과신위험':'과신위험' };
+  Object.keys(s).forEach(k => {
+    const m = text.match(new RegExp(k+'[:\\s]+([0-9]+)'));
+    if (m) s[k] = parseInt(m[1]);
+  });
+  return s;
+}
+
+// ── 스텝 생성 ──
+function buildSteps() {
+  steps = [];
+  results = {};
+  selectedAIs.forEach(id => { results[id] = {}; });
+
+  selectedAIs.forEach(id => steps.push({ aiId:id, round:1, key:'r1', done:false }));
+  if (rounds >= 2) selectedAIs.forEach(id => steps.push({ aiId:id, round:2, key:'r2', done:false, needsBuild:true }));
+  if (rounds >= 3) selectedAIs.forEach(id => steps.push({ aiId:id, round:3, key:'r3', done:false, needsBuild:true }));
+  steps.push({ aiId:'__final__', round:99, key:'final', done:false, isFinal:true, needsBuild:true });
+}
+
+// ── 시작 ──
+function start() {
+  topic = document.getElementById('topic').value.trim();
+  ctx   = document.getElementById('context').value.trim();
+  if (!topic) { alert('주제를 입력하세요.'); return; }
+  if (selectedAIs.length < 2) { alert('AI를 2개 이상 선택하세요.'); return; }
+
+  // 첨부 파일 내용을 ctx에 통합
+  if (attachedFiles.length > 0) {
+    const fileTexts = attachedFiles.map(f => {
+      if (f.fileType === 'image') {
+        const desc = document.getElementById('imgdesc-'+f.id)?.value.trim() || '';
+        return `\n\n─── [첨부 이미지: ${f.name}] ───\n${desc ? '이미지 내용/설명: ' + desc : '(이미지 파일 — 각 AI 창에서 직접 이미지를 첨부하여 분석 요청)'}`;
+      } else {
+        return `\n\n─── [첨부 파일: ${f.name}] ───\n${f.content}`;
+      }
+    }).join('');
+    ctx = (ctx ? ctx + fileTexts : fileTexts.trim());
+  }
+
+  buildSteps();
+  document.getElementById('emptyState').classList.add('hidden');
+  document.getElementById('flowArea').classList.remove('hidden');
+  document.getElementById('finalArea').classList.add('hidden');
+  document.getElementById('svMd').disabled = true;
+  document.getElementById('svHtml').disabled = true;
+  render();
+}
+
+// ── 렌더 ──
+const ROUND_INFO = {
+  1:{ label:'Round 1 · 독립 분석', desc:'각 AI 독립 분석 + 신뢰도 자가평가' },
+  2:{ label:'Round 2 · 교차 비판', desc:'상호 비판 (칭찬 금지)' },
+  3:{ label:'Round 3 · 수정안',    desc:'비판 수용·반영 최종 수정' },
+};
+
+function getPrompt(step) {
+  if (step.isFinal) return prFinal();
+  if (step.round === 1) return pr1(step.aiId);
+  if (step.round === 2) return pr2(step.aiId);
+  if (step.round === 3) return pr3(step.aiId);
+}
+
+function render() {
+  const fc = document.getElementById('flowContent');
+  fc.innerHTML = '';
+  let lastRound = 0;
+
+  steps.forEach((step, idx) => {
+    const isDone    = step.done;
+    const isCurrent = !isDone && steps.slice(0,idx).every(s=>s.done);
+    const status    = isDone ? 'done' : isCurrent ? 'cur' : '';
+
+    if (isCurrent && step.needsBuild) {
+      step.prompt = getPrompt(step);
+      step.needsBuild = false;
+    }
+
+    // Round header
+    if (!step.isFinal && step.round !== lastRound) {
+      lastRound = step.round;
+      const ri = ROUND_INFO[step.round];
+      const hdr = document.createElement('div');
+      hdr.className = 'rh';
+      hdr.innerHTML = `<span class="rh-num">ROUND ${step.round}</span><span class="rh-title">${ri.label}</span><span class="rh-desc">${ri.desc}</span>`;
+      fc.appendChild(hdr);
+    }
+    if (step.isFinal) {
+      const hdr = document.createElement('div');
+      hdr.className = 'rh';
+      hdr.innerHTML = `<span class="rh-num">FINAL</span><span class="rh-title">합의안 생성</span><span class="rh-desc">아무 AI에 붙여넣고 결과 입력</span>`;
+      fc.appendChild(hdr);
+    }
+
+    const card = document.createElement('div');
+    card.className = `sc ${status}`;
+    card.id = 'sc-'+idx;
+
+    const ai = step.isFinal ? null : AI[step.aiId];
+    const stLabel = { done:'완료', cur:'진행 중', '':'대기 중' }[status];
+    const stCls   = { done:'d',   cur:'c',       '':'w' }[status];
+
+    let headHtml = '';
+    if (step.isFinal) {
+      headHtml = `<span class="ai-badge" style="background:var(--gp-d);color:var(--gp);border:1px solid var(--gp-b)">합의안</span>
+        <span class="sc-lbl">최종 실행 판단 생성</span>`;
+    } else {
+      headHtml = `<span class="ai-badge" style="background:${ai.dim};color:${ai.color};border:1px solid ${ai.bdr}">${ai.emoji} ${ai.name}</span>
+        <span class="sc-lbl">${ai.role.split('.')[0]}</span>`;
+    }
+
+    let bodyHtml = '';
+    if (isCurrent || isDone) {
+      const promptHtml = `
+        <div>
+          <div class="mini-label">📋 복사할 프롬프트</div>
+          <div class="prompt-box">${esc(step.prompt||'')}</div>
+        </div>
+        <div class="btn-row">
+          <button class="cp-btn" id="cpb-${idx}" onclick="copyP(${idx})">📋 프롬프트 복사</button>
+          ${step.isFinal
+            ? selectedAIs.map(id=>`<a class="open-link" href="${AI[id].url}" target="_blank" style="background:${AI[id].dim};color:${AI[id].color};border-color:${AI[id].bdr}">${AI[id].emoji} ${AI[id].name}</a>`).join('')
+            : `<a class="open-link" href="${ai.url}" target="_blank" style="background:${ai.dim};color:${ai.color};border-color:${ai.bdr}">${ai.emoji} ${ai.name} 열기</a>`
+          }
+        </div>`;
+
+      // 신뢰도 점수 표시 (done 상태이고 점수가 있을 때)
+      let scoreHtml = '';
+      if (isDone && !step.isFinal && results[step.aiId]?.score) {
+        const sc = results[step.aiId].score;
+        scoreHtml = renderScoreHtml(sc, ai.color);
+      }
+
+      const inputHtml = isDone
+        ? `<div><div class="mini-label">✅ 입력된 답변</div><div class="saved-box">${esc(step.response||'')}</div></div>${scoreHtml}`
+        : `<div class="ta-wrap">
+            <div class="mini-label">✏️ ${step.isFinal ? '합의안' : ai.name+'의 답변'} 붙여넣기</div>
+            <textarea class="res-ta" id="ta-${idx}" placeholder="${step.isFinal ? '최종 합의안을 붙여넣으세요…' : ai.name+'의 답변을 붙여넣으세요…'}"></textarea>
+            <div class="word-meta"><span>Ctrl+Enter = 완료</span><span id="wm-${idx}">0자</span></div>
+            <button class="ok-btn" style="background:${step.isFinal?'var(--gp)':ai.color};color:#000a" onclick="confirm(${idx})">완료 →</button>
+          </div>`;
+
+      bodyHtml = `<div class="sc-body">${promptHtml}${inputHtml}</div>`;
+    }
+
+    card.innerHTML = `<div class="sc-head">${headHtml}<button class="collapse-btn" onclick="toggleCard(${idx})">▾</button><span class="sc-st ${stCls}">${stLabel}</span></div>${bodyHtml}`;
+    fc.appendChild(card);
+
+    if (idx < steps.length-1) {
+      const conn = document.createElement('div'); conn.className='conn'; fc.appendChild(conn);
+    }
+  });
+
+  updateProgress();
+}
+
+function renderScoreHtml(sc, color) {
+  const SCORE_COLOR = (v) => v >= 8 ? 'var(--gp)' : v >= 6 ? 'var(--gm)' : 'var(--cl)';
+  return `<div class="score-card">
+    <div class="mini-label">📊 신뢰도 자가평가</div>
+    <div class="score-grid">
+      ${Object.entries(sc).map(([k,v])=>v!==null?`
+      <div class="score-item">
+        <div class="score-name">${k}</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:${v*10}%;background:${SCORE_COLOR(v)}"></div></div>
+        <div class="score-val">${v}/10</div>
+      </div>`:'').join('')}
+    </div>
+  </div>`;
+}
+
+// ── 복사 ──
+async function copyText(text) {
+  const value = String(text || '');
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(value);
+    return true;
+  }
+  const t = document.createElement('textarea');
+  t.value = value;
+  t.setAttribute('readonly', '');
+  t.style.position = 'fixed';
+  t.style.left = '-9999px';
+  document.body.appendChild(t);
+  t.select();
+  const ok = document.execCommand('copy');
+  document.body.removeChild(t);
+  return ok;
+}
+
+async function copyP(idx) {
+  const btn = document.getElementById('cpb-'+idx);
+  if (!steps[idx].prompt) steps[idx].prompt = getPrompt(steps[idx]);
+  try {
+    await copyText(steps[idx].prompt || '');
+    btn.classList.add('ok'); btn.textContent='✓ 복사됨';
+    setTimeout(()=>{ btn.classList.remove('ok'); btn.textContent='📋 프롬프트 복사'; }, 2200);
+  } catch (e) {
+    showToast('복사 실패: 브라우저 권한을 확인하세요');
+  }
+}
+
+// ── 완료 ──
+function confirm(idx) {
+  const ta = document.getElementById('ta-'+idx);
+  const val = ta?.value.trim();
+  if (!val) { alert('답변을 입력하세요.'); return; }
+
+  steps[idx].response = val;
+  steps[idx].done = true;
+
+  const step = steps[idx];
+
+  if (!step.isFinal) {
+    results[step.aiId][step.key] = val;
+    // 신뢰도 파싱 — 가장 마지막 라운드 점수를 덮어씀
+    const sc = parseScore(val);
+    if (Object.values(sc).some(v=>v!==null)) {
+      results[step.aiId].score = sc;
+    }
+  } else {
+    // 합의안 파싱
+    finalData = parseFinal(val);
+    showFinal();
+  }
+
+  render();
+
+  setTimeout(()=>{
+    const ni = steps.findIndex((s,i)=>i>idx&&!s.done);
+    if (ni>=0) document.getElementById('sc-'+ni)?.scrollIntoView({behavior:'smooth',block:'start'});
+  }, 150);
+}
+
+// ── 합의율 + 최종 ──
+function parseFinal(text) {
+  const keys = ['지금당장','하지말것','확신영역','불확실영역','재검토시점','합의율분석','다음버전개선'];
+  const res = {};
+  keys.forEach((k,i)=>{
+    const next = keys[i+1];
+    const re = new RegExp(`\\[${k}\\]([\\s\\S]*?)${next?'\\['+next+'\\]':'$'}`);
+    const m = text.match(re);
+    res[k] = m ? m[1].trim() : '';
+  });
+  if (!Object.values(res).some(v=>v)) res['전체'] = text;
+  return res;
+}
+
+function extractConsensus(text) {
+  // 합의율분석에서 퍼센트 추출
+  const m = text.match(/(\d+)%/);
+  const pct = m ? parseInt(m[1]) : 60;
+
+  const agree   = text.match(/강한합의[：:]\s*([^\n\/]+)/)?.[1]?.trim() || '';
+  const partial  = text.match(/부분합의[：:]\s*([^\n\/]+)/)?.[1]?.trim() || '';
+  const disagree = text.match(/불일치[：:]\s*([^\n\/]+)/)?.[1]?.trim() || '';
+  return { pct, agree, partial, disagree };
+}
+
+function showFinal() {
+  const fa = document.getElementById('finalArea');
+  fa.classList.remove('hidden');
+
+  // 합의율
+  const con = extractConsensus(finalData['합의율분석'] || finalData['전체'] || '');
+  document.getElementById('consensusBox').innerHTML = `
+    <div class="consensus-header">
+      <div>
+        <div class="consensus-title">AI 합의율</div>
+        <div style="font-size:11px;color:var(--t2);margin-top:2px">${selectedAIs.length}개 AI 기준</div>
+      </div>
+      <div class="consensus-pct">${con.pct}%</div>
+    </div>
+    <div class="consensus-bar-wrap"><div class="consensus-bar" style="width:${con.pct}%"></div></div>
+    <div class="consensus-tags">
+      ${con.agree   ? `<span class="con-tag agree">✅ 강한합의: ${con.agree}</span>` : ''}
+      ${con.partial ? `<span class="con-tag partial">🟡 부분합의: ${con.partial}</span>` : ''}
+      ${con.disagree? `<span class="con-tag disagree">🔴 불일치: ${con.disagree}</span>` : ''}
+    </div>`;
+
+  // 실전 판단
+  const items = [
+    { key:'지금당장',    num:'01', title:'지금 당장 할 행동',  color:'var(--gp)' },
+    { key:'하지말것',    num:'02', title:'하지 말아야 할 행동', color:'var(--cl)' },
+    { key:'확신영역',    num:'03', title:'확신 높은 영역',      color:'var(--gm)' },
+    { key:'불확실영역',  num:'04', title:'아직 모르는 영역',    color:'var(--px)' },
+    { key:'재검토시점',  num:'05', title:'다음 재검토 시점',    color:'var(--t2)' },
+    { key:'다음버전개선',num:'06', title:'다음 버전 개선',      color:'var(--gp)' },
+  ];
+
+  const grid = document.getElementById('actionGrid');
+  if (finalData['전체']) {
+    grid.innerHTML = `<div class="action-item" style="grid-column:1/-1"><div class="action-body">${esc(finalData['전체'])}</div></div>`;
+  } else {
+    grid.innerHTML = items.map(it => `
+      <div class="action-item">
+        <div class="action-num">${it.num}</div>
+        <div class="action-title" style="color:${it.color}">${it.title}</div>
+        <div class="action-body">${esc(finalData[it.key]||'—')}</div>
+      </div>`).join('');
+  }
+
+  document.getElementById('svMd').disabled   = false;
+  document.getElementById('svHtml').disabled = false;
+
+  setTimeout(()=>fa.scrollIntoView({behavior:'smooth',block:'start'}), 200);
+}
+
+function updateProgress() {
+  const done = steps.filter(s=>s.done).length;
+  document.getElementById('pfill').style.width = (steps.length?Math.round(done/steps.length*100):0)+'%';
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+
+
+// ── v6: 일괄 입력 / 불일치 추가 토론 ──
+function showBatchPanel(){
+  if(!steps.length){ showToast('먼저 토론을 시작하세요'); return; }
+  const currentRound = steps.find(s=>!s.done && !s.isFinal)?.round || 1;
+  const roundSteps = steps.filter(s=>s.round===currentRound && !s.isFinal);
+  if(!roundSteps.length){ showToast('현재 일괄 입력할 라운드가 없습니다'); return; }
+
+  const panel=document.getElementById('batchPanel');
+  panel.className='batch-panel';
+  panel.innerHTML=`
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+      <div>
+        <div style="font-size:14px;font-weight:700">📦 Round ${currentRound} 일괄 입력</div>
+        <div style="font-size:11px;color:var(--t2)">각 AI 답변을 한 화면에 붙여넣고 한 번에 저장합니다.</div>
+      </div>
+      <button class="small-btn" onclick="hideBatchPanel()">닫기</button>
+    </div>
+    <div class="batch-grid">
+      ${roundSteps.map(s=>`<div class="batch-box">
+        <div class="batch-box-title" style="color:${AI[s.aiId].color}">${AI[s.aiId].emoji} ${AI[s.aiId].name}</div>
+        <textarea id="batch-${s.aiId}-${currentRound}" placeholder="${AI[s.aiId].name} 답변 붙여넣기"></textarea>
+      </div>`).join('')}
+    </div>
+    <div class="batch-actions">
+      <button class="small-btn" onclick="saveBatchRound(${currentRound})">현재 라운드 일괄 저장</button>
+      <button class="small-btn" onclick="copyCurrentRoundPrompts()">현재 라운드 프롬프트 전체 복사</button>
+    </div>`;
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function hideBatchPanel(){
+  const panel=document.getElementById('batchPanel');
+  panel.className='hidden';
+  panel.innerHTML='';
+}
+
+function saveBatchRound(r){
+  const roundSteps=steps.filter(s=>s.round===r && !s.isFinal && !s.done);
+  let saved=0;
+  roundSteps.forEach(s=>{
+    const el=document.getElementById(`batch-${s.aiId}-${r}`);
+    const val=el?.value.trim();
+    if(val){
+      s.response=val;
+      s.done=true;
+      results[s.aiId][s.key]=val;
+      const sc=parseScore(val);
+      if(Object.values(sc).some(v=>v!==null)) results[s.aiId].score=sc;
+      saved++;
+    }
+  });
+  hideBatchPanel();
+  render();
+  autoSave();
+  showToast(`${saved}개 답변 저장`);
+}
+
+function copyCurrentRoundPrompts(){
+  const currentRound=steps.find(s=>!s.done && !s.isFinal)?.round || 1;
+  const roundSteps=steps.filter(s=>s.round===currentRound && !s.isFinal);
+  const text=roundSteps.map(s=>{
+    if(!s.prompt) s.prompt=getPrompt(s);
+    return `===== ${AI[s.aiId].name} =====\n${s.prompt}`;
+  }).join('\n\n');
+  copyText(text).then(()=>showToast('현재 라운드 프롬프트 전체 복사'))
+    .catch(()=>showToast('복사 실패: 브라우저 권한을 확인하세요'));
+}
+
+function startDisagreementLoop(){
+  if(!finalData || (!finalData['불확실영역'] && !finalData['합의율분석'])){
+    showToast('최종 합의안 생성 후 사용할 수 있습니다');
+    return;
+  }
+
+  const seed = [
+    finalData['불확실영역'] ? `[불확실영역]\n${finalData['불확실영역']}` : '',
+    finalData['합의율분석'] ? `[합의율분석]\n${finalData['합의율분석']}` : ''
+  ].filter(Boolean).join('\n\n');
+
+  const panel=document.getElementById('batchPanel');
+  panel.className='disagree-panel';
+  panel.innerHTML=`
+    <div style="font-size:14px;font-weight:700">🔁 불일치 항목 추가 토론</div>
+    <div style="font-size:11px;color:var(--t2);margin-top:3px">최종 합의안에서 갈린 쟁점만 다시 토론합니다. 아래 내용을 수정해도 됩니다.</div>
+    <textarea id="disagreeSeed">${seed}</textarea>
+    <div class="batch-actions">
+      <button class="small-btn" onclick="appendDisagreementRound()">추가 토론 라운드 생성</button>
+      <button class="small-btn" onclick="hideBatchPanel()">취소</button>
+    </div>`;
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function appendDisagreementRound(){
+  const seed=document.getElementById('disagreeSeed')?.value.trim();
+  if(!seed){ showToast('재토론할 쟁점을 입력하세요'); return; }
+  const maxRound=Math.max(...steps.filter(s=>!s.isFinal).map(s=>s.round),0);
+  const newRound=maxRound+1;
+  const finalIdx=steps.findIndex(s=>s.isFinal);
+  const newSteps=selectedAIs.map(id=>({
+    aiId:id,
+    round:newRound,
+    key:'r'+newRound,
+    done:false,
+    prompt:`당신은 "${AI[id].name}" AI입니다.\n역할: ${AI[id].role}\n\n[추가 토론 라운드]\n주제: ${topic}\n\n아래는 이전 토론에서 합의되지 않은 쟁점입니다.\n${seed}\n\n지침:\n1. 이 쟁점에 대해서만 판단하세요.\n2. 기존 입장을 유지/수정하는 이유를 명확히 쓰세요.\n3. 실행 가능한 절충안 또는 보류 조건을 제시하세요.\n4. 250자 이내.\n\n마지막에 [신뢰도 자가평가] 동일 형식으로 추가.`
+  }));
+  if(finalIdx>=0){
+    steps.splice(finalIdx,0,...newSteps);
+    steps[steps.length-1].needsBuild=true;
+  } else {
+    steps.push(...newSteps);
+  }
+  hideBatchPanel();
+  render();
+  autoSave();
+  showToast(`Round ${newRound} 추가`);
+}
+
+
+// ── 파일 첨부 시스템 ──
+let attachedFiles = [];
+let _fileIdCounter = 0;
+let _pdfLibLoaded = false;
+
+function _initFileZone() {
+  const dropZone = document.getElementById('fileDropZone');
+  const fileIn   = document.getElementById('fileAttachInput');
+  if (!dropZone || !fileIn) return;
+
+  // 중복 초기화 방지
+  if (dropZone.dataset.fileZoneReady === '1') return;
+  dropZone.dataset.fileZoneReady = '1';
+
+  // label(for) 기본 동작을 유지하면서도, 키보드 접근과 드래그를 보강한다.
+  dropZone.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileIn.click();
+    }
+  });
+
+  fileIn.addEventListener('change', _handleFileInputChange);
+
+  dropZone.addEventListener('dragenter', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropZone.classList.add('drag-over');
+  });
+  dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+    dropZone.classList.add('drag-over');
+  });
+  dropZone.addEventListener('dragleave', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropZone.classList.remove('drag-over');
+  });
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropZone.classList.remove('drag-over');
+    const files = e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files : [];
+    _handleFileList(files);
+  });
+}
+
+function _handleFileInputChange(e) {
+  const input = e && e.target ? e.target : document.getElementById('fileAttachInput');
+  const files = input && input.files ? Array.from(input.files) : [];
+  if (!files.length) { showToast('선택된 파일이 없습니다'); return; }
+  _handleFileList(files);
+  // 같은 파일을 다시 선택해도 change 이벤트가 다시 발생하도록 초기화
+  if (input) input.value = '';
+}
+
+async function _handleFileList(list) {
+  const files = Array.from(list || []);
+  if (!files.length) return;
+  for (const f of files) await _processOneFile(f);
+  _renderChips();
+  showToast(files.length + '개 파일 첨부 완료');
+}
+
+async function _processOneFile(file) {
+  if (attachedFiles.find(f => f.name === file.name)) {
+    showToast('이미 첨부됨: ' + file.name); return;
+  }
+  const id = ++_fileIdCounter;
+  const entry = { id, name: file.name, fileType: null, content: '', dataUrl: null, status: 'proc' };
+  attachedFiles.push(entry);
+  _renderChips();
+  try {
+    if (file.type.startsWith('image/')) {
+      entry.fileType = 'image';
+      entry.dataUrl  = await _readDataURL(file);
+      entry.status   = 'ok';
+    } else if (file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf') {
+      entry.fileType = 'text';
+      entry.content  = await _extractPdf(file);
+      entry.status   = 'ok';
+    } else {
+      entry.fileType = 'text';
+      entry.content  = await file.text();
+      entry.status   = 'ok';
+    }
+  } catch(e) {
+    entry.content = '[파일 읽기 실패: ' + e.message + ']';
+    entry.fileType = 'text';
+    entry.status   = 'ok';
+  }
+  _renderChips();
+}
+
+function _readDataURL(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+async function _loadPdfJs() {
+  if (_pdfLibLoaded) return;
+  await new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  _pdfLibLoaded = true;
+}
+
+async function _extractPdf(file) {
+  showToast('PDF 추출 중…');
+  await _loadPdfJs();
+  const buf = await file.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+  let text = '[PDF: ' + file.name + ' | ' + pdf.numPages + '페이지]\n\n';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const ct   = await page.getTextContent();
+    text += '--- ' + i + '페이지 ---\n' + ct.items.map(it => it.str).join(' ') + '\n\n';
+  }
+  showToast('PDF ' + pdf.numPages + '페이지 추출 완료');
+  return text;
+}
+
+function _renderChips() {
+  const container = document.getElementById('fileChips');
+  if (!container) return;
+  container.innerHTML = '';
+  attachedFiles.forEach((f, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'file-chip-wrap';
+    const statusTag = f.status === 'proc'
+      ? '<span class="file-status-tag fst-proc">처리 중…</span>'
+      : f.fileType === 'image'
+        ? '<span class="file-status-tag fst-img">이미지</span>'
+        : '<span class="file-status-tag fst-ok">' + _fmtSize(f.content.length) + '</span>';
+    const iconHtml = (f.fileType === 'image' && f.dataUrl)
+      ? '<img src="' + f.dataUrl + '" class="file-chip-thumb">'
+      : '<span class="file-chip-icon">' + _fileIcon(f.name) + '</span>';
+    let descHtml = '';
+    if (f.fileType === 'image' && f.status === 'ok') {
+      descHtml = '<div class="img-desc-area"><label>이미지 내용 설명 (선택 — 프롬프트에 포함됩니다)</label>'
+        + '<textarea class="img-desc-inp" id="imgdesc-' + f.id + '" placeholder="예: 재무제표 스크린샷 / 세특 초안 이미지 / 차트 등 — 내용을 설명해 주세요"></textarea></div>';
+    }
+    wrap.innerHTML = '<div class="file-chip">'
+      + iconHtml
+      + '<div class="file-chip-info"><div class="file-chip-name">' + f.name + '</div>'
+      + '<div class="file-chip-meta">' + statusTag + '</div></div>'
+      + '<button class="file-chip-rm" onclick="removeAttached(' + i + ')">✕</button>'
+      + '</div>' + descHtml;
+    container.appendChild(wrap);
+  });
+}
+
+function removeAttached(i) {
+  attachedFiles.splice(i, 1);
+  _renderChips();
+  showToast('첨부 파일 제거');
+}
+
+function _fmtSize(bytes) {
+  if (bytes < 1024) return bytes + 'B';
+  if (bytes < 1024*1024) return Math.round(bytes/1024) + 'KB';
+  return (bytes/1024/1024).toFixed(1) + 'MB';
+}
+
+function _fileIcon(name) {
+  const ext = (name.split('.').pop() || '').toLowerCase();
+  return {pdf:'📄',txt:'📝',md:'📝',csv:'📊',json:'📋',html:'🌐',js:'⚙️',py:'🐍',xml:'📋',log:'🗒️'}[ext] || '📎';
+}
+
+// ── v5 추가 기능 ──
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+function autoSave(){
+  const data={
+    activePreset, rounds, selectedAIs, steps, results, finalData, topic, ctx
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function restoreAutoSave(){
+  const raw=localStorage.getItem(STORAGE_KEY) || localStorage.getItem('ai_meeting_v5');
+  if(!raw) return;
+  try{
+    const d=JSON.parse(raw);
+    activePreset=d.activePreset||'invest';
+    rounds=d.rounds||3;
+    selectedAIs=d.selectedAIs||selectedAIs;
+    steps=d.steps||[];
+    results=d.results||{};
+    finalData=d.finalData||{};
+    topic=d.topic||'';
+    ctx=d.ctx||'';
+
+    document.getElementById('topic').value=topic;
+    document.getElementById('context').value=ctx;
+
+    if(steps.length){
+      document.getElementById('emptyState').classList.add('hidden');
+      document.getElementById('flowArea').classList.remove('hidden');
+      render();
+      if(Object.keys(finalData).length){
+        showFinal();
+      }
+    }
+    showToast('자동 저장 세션 복원');
+  }catch(e){}
+}
+
+function exportSession(){
+  const data={activePreset, rounds, selectedAIs, steps, results, finalData, topic, ctx};
+  dl(`AI회의실_session_${Date.now()}.json`, JSON.stringify(data,null,2), 'application/json');
+}
+
+function importSession(){
+  document.getElementById('sessionFile').click();
+}
+
+document.getElementById('sessionFile').addEventListener('change', async (e)=>{
+  const f=e.target.files[0];
+  if(!f) return;
+  const txt=await f.text();
+  const d=JSON.parse(txt);
+
+  activePreset=d.activePreset||'invest';
+  rounds=d.rounds||3;
+  selectedAIs=d.selectedAIs||selectedAIs;
+  steps=d.steps||[];
+  results=d.results||{};
+  finalData=d.finalData||{};
+  topic=d.topic||'';
+  ctx=d.ctx||'';
+
+  document.getElementById('topic').value=topic;
+  document.getElementById('context').value=ctx;
+
+  document.getElementById('emptyState').classList.add('hidden');
+  document.getElementById('flowArea').classList.remove('hidden');
+
+  render();
+  if(Object.keys(finalData).length){ showFinal(); }
+  showToast('세션 불러오기 완료');
+});
+
+function toggleCard(idx){
+  const el=document.getElementById('sc-'+idx);
+  el.classList.toggle('collapsed');
+}
+
+document.addEventListener('input',(e)=>{
+  if(e.target.classList.contains('res-ta')){
+    const idx=e.target.id.split('-')[1];
+    const wm=document.getElementById('wm-'+idx);
+    if(wm) wm.textContent=e.target.value.length+'자';
+  }
+});
+
+document.addEventListener('keydown',(e)=>{
+  if(e.ctrlKey && e.key==='Enter'){
+    const ta=document.activeElement;
+    if(ta && ta.classList.contains('res-ta')){
+      const idx=parseInt(ta.id.split('-')[1]);
+      confirm(idx);
+    }
+  }
+});
+
+const _origConfirm = confirm;
+confirm = function(idx){
+  _origConfirm(idx);
+  autoSave();
+  showToast('응답 저장 완료');
+}
+
+const _origStart = start;
+start = function(){
+  _origStart();
+  autoSave();
+}
+
+window.addEventListener('beforeunload', autoSave);
+function bootApp(){
+  _initFileZone();
+  try {
+    restoreAutoSave();
+  } catch(e) {
+    console.warn('자동 저장 복원 실패:', e);
+  } finally {
+    _initFileZone();
+  }
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootApp);
+} else {
+  bootApp();
+}
+
+
+// ── 저장 ──
+function dl(name, content, type) {
+  const b = new Blob([content],{type}), a=document.createElement('a');
+  a.href=URL.createObjectURL(b); a.download=name; a.click(); URL.revokeObjectURL(a.href);
+}
+
+function saveMD() {
+  const date = new Date().toLocaleDateString('ko-KR');
+  let md = `# AI 회의실 v7 · 토론 결과\n\n- **주제**: ${topic}\n- **유형**: ${PRESET_CONTEXT[activePreset]}\n- **날짜**: ${date}\n- **참여AI**: ${selectedAIs.map(id=>AI[id].name).join(', ')}\n\n---\n\n`;
+  const rn={1:'Round 1 · 독립 분석',2:'Round 2 · 교차 비판',3:'Round 3 · 수정안'};
+  const rs=[...new Set(steps.filter(s=>!s.isFinal).map(s=>s.round))];
+  rs.forEach(r=>{
+    md+=`## ${rn[r] || 'Round ' + r + ' · 추가 토론'}\n\n`;
+    steps.filter(s=>s.round===r&&!s.isFinal).forEach(s=>{
+      md+=`### ${AI[s.aiId].emoji} ${AI[s.aiId].name}\n\n${s.response||'(미입력)'}\n\n`;
+    });
+  });
+  if (finalData) {
+    md+=`---\n\n## 합의율 분석\n\n${finalData['합의율분석']||''}\n\n## 실전 판단 요약\n\n`;
+    ['지금당장','하지말것','확신영역','불확실영역','재검토시점','다음버전개선'].forEach(k=>{
+      if(finalData[k]) md+=`### ${k}\n\n${finalData[k]}\n\n`;
+    });
+  }
+  dl(`AI회의실_${topic.slice(0,15)}_${date}.md`, md, 'text/markdown;charset=utf-8');
+}
+
+function saveHTML() {
+  const date = new Date().toLocaleDateString('ko-KR');
+  const rs=[...new Set(steps.filter(s=>!s.isFinal).map(s=>s.round))];
+  const rn={1:'Round 1 · 독립 분석',2:'Round 2 · 교차 비판',3:'Round 3 · 수정안'};
+  const roundsHTML = rs.map(r=>`<h3>${rn[r] || 'Round ' + r + ' · 추가 토론'}</h3>${steps.filter(s=>s.round===r&&!s.isFinal).map(s=>`<div class="pb"><div class="pn" style="color:${AI[s.aiId].color.replace('var(','').replace(')','')}">${AI[s.aiId].emoji} ${AI[s.aiId].name}</div><div class="pt">${(s.response||'(미입력)').replace(/\n/g,'<br>')}</div></div>`).join('')}`).join('');
+  const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>AI 회의실 · ${topic}</title>
+<style>body{font-family:sans-serif;background:#0c0d11;color:#dde1f0;max-width:820px;margin:48px auto;padding:0 24px;line-height:1.7}
+h1{font-size:20px;font-weight:700}h2{font-size:13px;font-weight:700;color:#7880a0;text-transform:uppercase;letter-spacing:.08em;margin:28px 0 10px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,.06)}
+h3{font-size:12px;color:#3a3f5c;margin:14px 0 7px}.pb{margin-bottom:11px}.pn{font-size:12px;font-weight:700;margin-bottom:4px}
+.pt{background:#11131a;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 13px;font-size:12px;color:#7880a0}
+.meta{font-size:11px;color:#3a3f5c;margin:6px 0 32px}.fg{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.06)}
+.fi{background:#11131a;padding:13px 16px}.fit{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}.fib{font-size:12px;color:#7880a0;line-height:1.75}
+</style></head><body>
+<h1>🏛 AI 회의실 v7</h1>
+<div class="meta">주제: ${topic} | 유형: ${PRESET_CONTEXT[activePreset]} | ${date} | ${selectedAIs.map(id=>AI[id].name).join(' · ')}</div>
+<h2>라운드별 토론</h2>${roundsHTML}
+<h2>실전 판단 요약</h2>
+<div class="fg">${['지금당장','하지말것','확신영역','불확실영역','재검토시점','다음버전개선'].map(k=>`<div class="fi"><div class="fit">${k}</div><div class="fib">${(finalData[k]||'—').replace(/\n/g,'<br>')}</div></div>`).join('')}</div>
+<div class="toast" id="toast"></div>
+</body></html>`;
+  dl(`AI회의실_${topic.slice(0,15)}_${date}.html`, html, 'text/html;charset=utf-8');
+}
+</script>
+<div class="toast" id="toast"></div>
+</body>
+</html>
