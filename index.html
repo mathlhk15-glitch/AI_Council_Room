@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 회의실 v7</title>
+<title>AI 회의실 v11.2</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:    #0c0d11;
-  --bg2:   #11131a;
-  --bg3:   #171923;
-  --bg4:   #1d2030;
-  --line:  rgba(255,255,255,0.06);
-  --line2: rgba(255,255,255,0.11);
-  --t1:    #dde1f0;
-  --t2:    #7880a0;
-  --t3:    #3a3f5c;
+  --bg:    #f5f4f0;
+  --bg2:   #ffffff;
+  --bg3:   #f0efe9;
+  --bg4:   #e8e7e0;
+  --line:  rgba(0,0,0,0.08);
+  --line2: rgba(0,0,0,0.15);
+  --t1:    #1a1c22;
+  --t2:    #52556a;
+  --t3:    #9296aa;
 
-  --cl: #e07a50; --cl-d: rgba(224,122,80,0.10); --cl-b: rgba(224,122,80,0.25);
-  --gm: #4f91f5; --gm-d: rgba(79,145,245,0.10); --gm-b: rgba(79,145,245,0.25);
-  --gp: #38c97e; --gp-d: rgba(56,201,126,0.10); --gp-b: rgba(56,201,126,0.25);
-  --px: #a87ef0; --px-d: rgba(168,126,240,0.10); --px-b: rgba(168,126,240,0.25);
+  --cl: #c95e2a; --cl-d: rgba(201,94,42,0.10); --cl-b: rgba(201,94,42,0.30);
+  --gm: #2563c9; --gm-d: rgba(37,99,201,0.10); --gm-b: rgba(37,99,201,0.30);
+  --gp: #1a9e5c; --gp-d: rgba(26,158,92,0.10); --gp-b: rgba(26,158,92,0.30);
+  --px: #7c3ec9; --px-d: rgba(124,62,201,0.10); --px-b: rgba(124,62,201,0.30);
 
   --r: 10px; --rl: 14px;
 }
@@ -29,7 +29,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t1);
 .shell{display:grid;grid-template-columns:310px 1fr;min-height:100vh}
 
 /* ── SIDEBAR ── */
-.sb{background:var(--bg2);border-right:1px solid var(--line);padding:20px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sb{background:var(--bg2);border-right:1px solid var(--line);padding:20px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto;box-shadow:2px 0 8px rgba(0,0,0,0.06)}
 .logo{display:flex;align-items:center;gap:10px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--cl),var(--px));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
 .logo-title{font-size:14px;font-weight:700;letter-spacing:-.02em}
@@ -91,10 +91,24 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t1);
 .rh-title{font-size:14px;font-weight:700}
 .rh-desc{font-size:11px;color:var(--t2);margin-left:auto}
 
+/* Round action bar */
+.round-action-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px}
+.round-copy-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.round-copy-btn:hover{background:var(--bg4);color:var(--t1)}
+.round-copy-btn.ok{background:var(--gp-d);border-color:var(--gp-b);color:var(--gp)}
+.round-done-btn{margin-left:auto;padding:8px 18px;background:linear-gradient(135deg,var(--gm),var(--gp));border:none;border-radius:var(--r);color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s}
+.round-done-btn:hover{opacity:.85}
+.round-done-btn:active{transform:scale(.97)}
+.round-missing{font-size:11px;color:var(--cl);font-weight:600}
+
+/* Round card grid */
+.round-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+@media(max-width:900px){.round-cards{grid-template-columns:1fr}}
+
 /* Step card */
-.sc{background:var(--bg2);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:8px;transition:border-color .25s}
-.sc.cur{border-color:var(--line2)}
-.sc.done{opacity:.65}
+.sc{background:var(--bg2);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:8px;transition:border-color .25s;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.sc.cur{border-color:var(--line2);box-shadow:0 2px 10px rgba(0,0,0,0.09)}
+.sc.done{opacity:.7}
 .sc-head{display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid var(--line)}
 .ai-badge{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;flex-shrink:0}
 .sc-lbl{font-size:12px;color:var(--t2);flex:1}
@@ -173,7 +187,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t1);
 .word-meta{font-size:10px;color:var(--t3);display:flex;justify-content:space-between;margin-top:4px}
 .collapse-btn{margin-left:auto;background:none;border:none;color:var(--t3);cursor:pointer;font-size:11px}
 .sc.collapsed .sc-body{display:none}
-.toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--line2);padding:10px 14px;border-radius:10px;font-size:12px;color:var(--t1);z-index:9999;opacity:0;transform:translateY(10px);transition:all .25s}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--t1);border:1px solid var(--line2);padding:10px 14px;border-radius:10px;font-size:12px;color:#fff;z-index:9999;opacity:0;transform:translateY(10px);transition:all .25s;box-shadow:0 4px 16px rgba(0,0,0,0.18)}
 .toast.show{opacity:1;transform:translateY(0)}
 
 .hidden{display:none!important}
@@ -200,10 +214,47 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t1);
 .fst-ok{background:var(--gp-d);color:var(--gp);border:1px solid var(--gp-b)}
 .fst-img{background:var(--gm-d);color:var(--gm);border:1px solid var(--gm-b)}
 .fst-proc{background:var(--px-d);color:var(--px);border:1px solid var(--px-b)}
+.fst-err{background:var(--cl-d);color:var(--cl);border:1px solid var(--cl-b)}
+
+
+
+/* ── 도움말 / 상태 안내 ── */
+.help-note{background:var(--bg2);border:1px solid var(--line);border-radius:var(--rl);padding:12px 14px;margin-top:14px;max-width:520px;text-align:left;font-size:11px;color:var(--t2);line-height:1.7;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.help-note b{color:var(--t1)}
+.ai-tog.locked{opacity:.55;cursor:not-allowed}
+.ai-tog.locked *{pointer-events:none}
+.mode-tip{font-size:10px;color:var(--t3);line-height:1.6;margin-top:6px}
+
+/* ── 모바일 반응형 ── */
+@media (max-width: 760px) {
+  .shell{display:block;min-height:100vh}
+  .sb{position:relative;width:100%;height:auto;max-height:none;border-right:none;border-bottom:1px solid var(--line);padding:16px 14px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+  .main{padding:18px 14px}
+  .logo{padding-bottom:12px}
+  .preset-grid{grid-template-columns:1fr 1fr;gap:6px}
+  .preset-chip{font-size:10.5px;padding:7px 6px}
+  .ai-toggles{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .ai-tog{padding:8px 8px;align-items:flex-start}
+  .ai-name{font-size:11px}.ai-sub{font-size:9px}
+  .rounds-row{gap:5px}.rb{font-size:11px;padding:8px 0}
+  .save-row{flex-wrap:wrap}.sv-btn{min-width:calc(50% - 3px);flex:1 1 calc(50% - 3px)}
+  .rh{flex-wrap:wrap;align-items:flex-start;gap:6px;padding-top:14px}.rh-desc{margin-left:0;width:100%;font-size:10px}
+  .sc-head{gap:6px;padding:10px 10px}.ai-badge{font-size:9px;padding:3px 7px}.sc-lbl{font-size:11px}.sc-st{font-size:9px;padding:2px 6px}
+  .sc-body{padding:11px}.prompt-box{max-height:180px;font-size:11px}.res-ta{font-size:12px;min-height:120px}
+  .btn-row{gap:6px}.cp-btn,.open-link,.small-btn{width:100%;justify-content:center}
+  .batch-grid{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}.consensus-header{align-items:flex-start}.consensus-pct{font-size:20px}
+  .empty{padding:42px 0}.empty-ico{font-size:40px}.empty-sub{max-width:100%;font-size:11px}.help-note{max-width:100%;font-size:10.5px}
+}
+
+@media (max-width: 420px) {
+  .preset-grid,.ai-toggles{grid-template-columns:1fr}
+  .main{padding:14px 10px}.sb{padding:14px 10px}
+  .action-item{padding:12px}.final-head{padding:12px 14px}.consensus-box{padding:14px}
+}
 
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--line2);border-radius:10px}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.18);border-radius:10px}
 </style>
 </head>
 <body>
@@ -214,8 +265,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t1);
   <div class="logo">
     <div class="logo-mark">🏛</div>
     <div>
-      <div class="logo-title">AI 회의실 v7</div>
-      <div class="logo-sub">집단지성 의사결정 시스템 · Disagreement Loop Edition</div>
+      <div class="logo-title">AI 회의실 v11.2</div>
+      <div class="logo-sub">집단지성 의사결정 시스템 · 라운드 병렬 진행 Edition</div>
     </div>
   </div>
 
@@ -223,13 +274,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t1);
   <div>
     <div class="slabel">회의 타입</div>
     <div class="preset-grid" id="presetGrid">
-      <div class="preset-chip active" data-preset="invest" onclick="setPreset(this)">📈 투자 판단<br><span style="font-size:9px;color:var(--t3)">종목·포트 검토</span></div>
-      <div class="preset-chip" data-preset="policy" onclick="setPreset(this)">📋 정책 검토<br><span style="font-size:9px;color:var(--t3)">교육·제도 분석</span></div>
-      <div class="preset-chip" data-preset="setech" onclick="setPreset(this)">📝 세특 리라이팅<br><span style="font-size:9px;color:var(--t3)">세특 비판·수정</span></div>
-      <div class="preset-chip" data-preset="research" onclick="setPreset(this)">🔬 탐구활동 설계<br><span style="font-size:9px;color:var(--t3)">활동 생성</span></div>
-      <div class="preset-chip" data-preset="prompt" onclick="setPreset(this)">⚡ 프롬프트 개선<br><span style="font-size:9px;color:var(--t3)">명령어 비판</span></div>
-      <div class="preset-chip" data-preset="program" onclick="setPreset(this)">💻 프로그램 개선<br><span style="font-size:9px;color:var(--t3)">코드·UX·기능 검토</span></div>
-      <div class="preset-chip" data-preset="present" onclick="setPreset(this)">🎤 설명회 자료<br><span style="font-size:9px;color:var(--t3)">학부모 설득</span></div>
+      <div class="preset-chip active" data-preset="invest" onclick="setPreset(this)">📈 투자·재테크<br><span style="font-size:9px;color:var(--t3)">비중·리스크 검토</span></div>
+      <div class="preset-chip" data-preset="purchase" onclick="setPreset(this)">🛒 구매·소비<br><span style="font-size:9px;color:var(--t3)">가격·필요성 판단</span></div>
+      <div class="preset-chip" data-preset="work" onclick="setPreset(this)">💼 일·업무 전략<br><span style="font-size:9px;color:var(--t3)">기획·우선순위</span></div>
+      <div class="preset-chip" data-preset="idea" onclick="setPreset(this)">🧠 아이디어 검토<br><span style="font-size:9px;color:var(--t3)">프로젝트·창업</span></div>
+      <div class="preset-chip" data-preset="writing" onclick="setPreset(this)">📝 글쓰기·문서<br><span style="font-size:9px;color:var(--t3)">문장·구조 개선</span></div>
+      <div class="preset-chip" data-preset="program" onclick="setPreset(this)">💻 프로그램·서비스<br><span style="font-size:9px;color:var(--t3)">코드·UX·기능</span></div>
+      <div class="preset-chip" data-preset="present" onclick="setPreset(this)">🎤 발표·설득<br><span style="font-size:9px;color:var(--t3)">PT·제안·설명</span></div>
+      <div class="preset-chip" data-preset="life" onclick="setPreset(this)">❤️ 인생·진로 결정<br><span style="font-size:9px;color:var(--t3)">이직·진학·선택</span></div>
     </div>
   </div>
 
@@ -238,19 +290,19 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t1);
     <div class="slabel">주제</div>
     <div class="field">
       <label>질문 / 주제</label>
-      <input type="text" id="topic" placeholder="예: 삼성전자 비중을 30%로 늘려야 하는가?"/>
+      <input type="text" id="topic" placeholder="예: 이 선택을 지금 실행해도 될까?"/>
     </div>
     <div class="field">
       <label>배경 자료 (선택)</label>
-      <textarea id="context" placeholder="포트폴리오, 조건, 데이터 등"></textarea>
+      <textarea id="context" placeholder="현재 상황, 선택지, 조건, 자료, 고민 지점 등"></textarea>
     </div>
     <div class="field">
       <label>📎 파일 / 이미지 첨부</label>
       <label class="file-drop-zone" id="fileDropZone" for="fileAttachInput" tabindex="0" role="button" aria-label="파일 또는 이미지 첨부">
         <span>📎</span>
-        <div>클릭 또는 드래그하여 첨부<br><span style="font-size:10px;color:var(--t3)">TXT · MD · CSV · JSON · PDF · JPG · PNG 등</span></div>
+        <div>클릭 또는 드래그하여 첨부<br><span style="font-size:10px;color:var(--t3)">TXT · MD · CSV · JSON · PDF · JPG · PNG 등<br>PDF 추출은 인터넷 연결 필요</span></div>
       </label>
-      <input type="file" id="fileAttachInput" multiple accept=".txt,.md,.csv,.json,.pdf,.html,.js,.py,.xml,.log,image/*" onchange="_handleFileInputChange(event)" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+      <input type="file" id="fileAttachInput" multiple accept=".txt,.md,.csv,.json,.pdf,.html,.js,.py,.xml,.log,image/*" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <div class="file-chips" id="fileChips"></div>
     </div>
   </div>
@@ -292,18 +344,19 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t1);
     <div class="rounds-row">
       <button class="rb" onclick="setR(2,this)">2라운드</button>
       <button class="rb on" onclick="setR(3,this)">3라운드</button>
+      <button class="rb" onclick="setR(4,this)">4라운드</button>
     </div>
   </div>
 
   <div style="margin-top:auto;display:flex;flex-direction:column;gap:7px">
     <button class="go-btn" onclick="start()">🚀 토론 시작</button>
-    <button class="go-btn secondary" onclick="startDisagreementLoop()">🔁 불일치 항목 추가 토론</button>
-    <button class="go-btn secondary" onclick="showBatchPanel()">📦 라운드 일괄 입력</button>
+    <button class="go-btn secondary" onclick="startDisagreementLoop()" title="최종 결론 이후 의견이 갈린 항목만 재토론합니다">🔁 불일치 항목 추가 토론</button>
     <div class="save-row">
       <button class="sv-btn" id="svMd" onclick="saveMD()" disabled>⬇ MD</button>
       <button class="sv-btn" id="svHtml" onclick="saveHTML()" disabled>⬇ HTML</button>
       <button class="sv-btn" onclick="exportSession()">⬇ 세션</button>
       <button class="sv-btn" onclick="importSession()">⬆ 불러오기</button>
+      <button class="sv-btn" onclick="resetAll()" style="color:var(--cl);border-color:var(--cl-b)" title="현재 세션을 모두 초기화합니다">🗑 초기화</button>
     </div>
   </div>
 </aside>
@@ -312,11 +365,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t1);
 <main class="main" id="mainArea">
   <div class="empty" id="emptyState">
     <div class="empty-ico">🏛</div>
-    <div class="empty-title">다중 AI 집단지성 의사결정 시스템</div>
+    <div class="empty-title">다중 AI 의사결정 회의실</div>
     <div class="empty-sub">
-      프리셋 선택 → 주제 입력 → 토론 시작<br>
-      각 AI 프롬프트를 복사해 붙여넣으면<br>
-      신뢰도 점수 · 합의율 · 실행안을 자동 생성합니다
+      회의 타입 선택 → 주제 입력 → 토론 시작<br>
+      각 AI가 타 AI 의견을 참고하되 독립적 입장을 유지하며<br>
+      Round 1~4 반복 후 최종 결론을 도출합니다<br>
+      <span style="font-size:10px;color:var(--t3)">※ 수동 복사·붙여넣기 방식 / 합의율은 참고 지표</span>
+    </div>
+    <div class="help-note">
+      <b>사용 전 안내</b><br>
+      이 도구는 여러 AI의 답변을 자동으로 가져오지 않습니다. 프롬프트를 복사해 각 AI 창에 붙여넣고, 받은 답변을 다시 이 화면에 입력하는 방식입니다.<br>
+      합의율은 통계 계산값이 아니라 최종 요약 AI가 의견 수렴 정도를 해석한 참고 지표입니다.
     </div>
   </div>
 
@@ -353,14 +412,249 @@ const AI = {
   perplexity: { name:'Perplexity', emoji:'🟣', color:'var(--px)', dim:'var(--px-d)', bdr:'var(--px-b)', url:'https://perplexity.ai',     role:'최신 사례·반례 수집가. 다른 AI들의 주장 중 outdated 정보·사실 오류를 최신 데이터로 반박한다. 출처 명시.' },
 };
 
+// ── AI별 특화 렌즈 ──
+function getAINote(aiId, isReflect = false) {
+  if (aiId === 'claude') return `\n🔴 당신의 특수 렌즈 — 리스크 감시:
+• 이 결정이 5년 후 초래할 수 있는 최악의 시나리오를 반드시 1가지 명시하세요.
+• 낙관적 주장에는 반드시 "하지만 ~라면 무너진다"는 반례를 제시하세요.
+• 되돌리기 어려운 결정이라면 그 비가역성을 명시하고 신중론을 제시하세요.`;
+
+  if (aiId === 'gemini') return `\n🔵 당신의 특수 렌즈 — 정량 검증:
+• 수치나 비율 없는 주장은 인정하지 마세요. 핵심 주장마다 반드시 구체적 숫자·비율·범위를 병기하세요.
+• 다른 AI가 수치 없이 주장한 내용이 있다면 "근거 수치 없음"으로 표시하고 재검증을 요구하세요.
+• 계산 불가능한 부분은 "정량화 불가 — 주관적 판단 영역"으로 명시하세요.`;
+
+  if (aiId === 'gpt') return `\n🟢 당신의 특수 렌즈 — 즉시 실행:
+• 분석·이론보다 "이번 주 안에 할 수 있는 액션 3가지"를 반드시 포함하세요.
+• 각 액션에 담당자·소요 시간·필요 자원을 한 줄로 명시하세요.
+• 실행을 막는 병목이 있다면 그 해소 방법을 먼저 제시하세요.`;
+
+  if (aiId === 'perplexity') return isReflect
+    ? '\n⚡ 당신의 특수 임무: 다른 AI들의 주장 중 사실 오류·outdated 정보를 최신 자료로 팩트체크하고 출처를 명시하세요.\n⚠️ 출력 언어 고정: 반드시 한국어로 답하세요. 검색 자료나 출처가 영어여도 최종 분석·요약·판단은 모두 한국어로 작성하세요. 단, 고유명사·논문명·기관명·원문 제목은 필요할 때만 영어를 병기하세요.'
+    : '\n⚡ 당신의 특수 임무: 최신 기사·데이터·실적 기준으로 분석하고, 사용한 정보의 출처(연도 포함)를 반드시 명시하세요. outdated 정보 사용 시 스스로 경고하세요.\n⚠️ 출력 언어 고정: 반드시 한국어로 답하세요. 검색 자료나 출처가 영어여도 최종 분석·요약·판단은 모두 한국어로 작성하세요. 단, 고유명사·논문명·기관명·원문 제목은 필요할 때만 영어를 병기하세요.';
+
+  return '';
+}
+
 const PRESETS = {
-  invest:  { label:'투자 판단',       hint:'종목명, 현재 보유 비중, 포트폴리오 상황 등을 배경 자료에 입력하세요.' },
-  policy:  { label:'정책 검토',       hint:'정책 원문 또는 핵심 내용을 배경 자료에 붙여넣으세요.' },
-  setech:  { label:'세특 리라이팅',   hint:'현재 세특 초안을 배경 자료에 붙여넣으세요.' },
-  research:{ label:'탐구활동 설계',   hint:'과목명, 관심 분야, 목표 역량을 배경 자료에 입력하세요.' },
-  prompt:  { label:'프롬프트 개선',   hint:'개선하려는 프롬프트를 배경 자료에 붙여넣으세요.' },
-  program: { label:'프로그램 개선',   hint:'HTML/JS 코드, 기능 설명, 오류 상황, 원하는 개선 방향을 붙여넣으세요.' },
-  present: { label:'설명회 자료',     hint:'설명회 대상, 핵심 메시지, 우려 사항을 배경 자료에 입력하세요.' },
+  invest: {
+    label:'투자·재테크',
+    context:'투자·재테크 판단',
+    hint:'종목, 자산 비중, 투자 기간, 현금 여력, 손실 허용 범위, 고민 지점을 입력하세요.',
+    guide:`• 기대수익보다 손실 가능성, 현금흐름, 투자 기간, 비중 리스크를 먼저 검토하세요.
+• 확정적 매수·매도 지시가 아니라 시나리오, 비중 조정 기준, 분할 매수·매도 기준을 제시하세요.
+• 단기 가격 예측보다 상승/하락/횡보 시나리오별 대응 원칙을 제시하세요.`,
+    final:`[판단요약]
+(현재 결정을 실행/보류/축소 중 무엇으로 볼지 요약)
+
+[권장비중·행동]
+(매수·매도 단정이 아니라 비중, 분할, 대기 현금, 재검토 조건 중심)
+
+[상승시나리오]
+(좋게 풀릴 조건과 대응)
+
+[하락시나리오]
+(손실 방어 기준과 중단 조건)
+
+[하지말것]
+(과잉 확신, 몰빵, 충동 매매 등 피해야 할 행동)
+
+[재검토시점]
+(다시 볼 가격·실적·뉴스·기간 조건)
+
+[합의율분석]
+(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX% — 단, 이는 통계 계산값이 아니라 의견 수렴 정도에 대한 해석값)`
+  },
+  purchase: {
+    label:'구매·소비 결정',
+    context:'구매·소비 결정',
+    hint:'구매하려는 물건, 가격, 사용 목적, 예산, 대체재, 망설이는 이유를 입력하세요.',
+    guide:`• 가격, 사용 빈도, 대체재, 유지비, 중고가치, 후회 가능성을 비교하세요.
+• 사고 싶은 감정과 실제 필요성을 분리해서 판단하세요.
+• 구매/보류/대안 구매/렌탈/중고 구매 기준을 나누어 제시하세요.`,
+    final:`[최종판단]
+(구매/보류/대안/조건부 구매 중 하나로 요약)
+
+[구매해도 되는 조건]
+(예산, 사용 빈도, 가격 조건, 필요한 기능)
+
+[보류해야 하는 조건]
+(후회 가능성, 과소사용, 예산 압박, 대체재)
+
+[비교대안]
+(더 싼 대안, 중고, 렌탈, 기다리기 등)
+
+[체크리스트]
+(결제 전 확인할 3~5가지)
+
+[합의율분석]
+(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX% — 단, 이는 통계 계산값이 아니라 의견 수렴 정도에 대한 해석값)`
+  },
+  work: {
+    label:'일·업무 전략',
+    context:'일·업무 전략',
+    hint:'업무 목표, 이해관계자, 현재 문제, 일정, 리스크, 원하는 결과를 입력하세요.',
+    guide:`• 이해관계자, 일정, 리스크, 실행 순서, 커뮤니케이션 비용을 기준으로 판단하세요.
+• 당장 1주일 안에 할 일과 중장기 후속 조치를 나누세요.
+• 조직 내 반대 논리와 설득 포인트를 함께 제시하세요.`,
+    final:`[업무판단]
+(현재 전략을 유지/수정/중단/재설계 중 무엇으로 볼지 요약)
+
+[우선순위]
+(가장 먼저 처리할 일과 뒤로 미룰 일)
+
+[실행계획]
+(이번 주 액션, 담당자, 소요 시간, 필요한 자료)
+
+[설득포인트]
+(상사·동료·고객 등 이해관계자별 메시지)
+
+[리스크·병목]
+(실패 가능성과 막힐 지점)
+
+[합의율분석]
+(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX% — 단, 이는 통계 계산값이 아니라 의견 수렴 정도에 대한 해석값)`
+  },
+  idea: {
+    label:'아이디어 검토',
+    context:'아이디어·프로젝트 검토',
+    hint:'아이디어 내용, 목표 사용자, 차별점, 실행 자원, 우려되는 점을 입력하세요.',
+    guide:`• 참신성보다 실제 수요, 차별성, 실행 난이도, 실패 가능성, 검증 가능성을 우선 평가하세요.
+• 최소 실험 방법과 성공/중단 지표를 제시하세요.
+• 아이디어를 살릴 조건뿐 아니라 버릴 조건도 명확히 제시하세요.`,
+    final:`[아이디어판단]
+(추진/보류/축소실험/폐기 중 무엇이 적절한지 요약)
+
+[핵심가치]
+(누구에게 어떤 문제를 해결하는지)
+
+[검증실험]
+(가장 작게 테스트할 방법과 필요한 자료)
+
+[성공지표]
+(계속 추진할 수 있는 기준)
+
+[중단조건]
+(버리거나 방향 전환해야 할 조건)
+
+[다음액션]
+(이번 주 바로 할 일)
+
+[합의율분석]
+(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX% — 단, 이는 통계 계산값이 아니라 의견 수렴 정도에 대한 해석값)`
+  },
+  writing: {
+    label:'글쓰기·문서 개선',
+    context:'글쓰기·문서 개선',
+    hint:'고치려는 글, 문서, 프롬프트, 자기소개서, 세특 초안, 보고서 초안을 붙여넣으세요.',
+    guide:`• 문장의 아름다움보다 목적, 독자, 설득 구조, 정보 배열을 먼저 점검하세요.
+• 삭제할 부분, 강화할 부분, 순서 변경이 필요한 부분을 구체적으로 제시하세요.
+• 최종 수정 예시를 반드시 포함하세요.`,
+    final:`[문서진단]
+(가장 큰 구조적 문제와 개선 방향)
+
+[삭제할부분]
+(중복, 추상어, 설득력이 약한 부분)
+
+[강화할부분]
+(근거, 사례, 표현, 흐름을 보강할 부분)
+
+[구조개선안]
+(문단 순서 또는 정보 배열 제안)
+
+[수정예시]
+(바로 사용할 수 있는 개선 문안)
+
+[주의할점]
+(과장, 어색한 표현, 독자 반응 리스크)
+
+[합의율분석]
+(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX% — 단, 이는 통계 계산값이 아니라 의견 수렴 정도에 대한 해석값)`
+  },
+  program: {
+    label:'프로그램·서비스 개선',
+    context:'프로그램·서비스 개선',
+    hint:'HTML/JS 코드, 기능 설명, 오류 상황, UX 문제, 원하는 개선 방향을 붙여넣으세요.',
+    guide:`• 기능 오류, UX 병목, 데이터 흐름, 저장/복원, 예외처리, 배포 가능성을 점검하세요.
+• 사용자가 막힐 지점을 우선적으로 찾아내세요.
+• 수정 우선순위를 치명/중요/개선으로 나누세요.`,
+    final:`[핵심진단]
+(프로그램·서비스의 가장 큰 문제와 강점)
+
+[치명오류]
+(실행을 막거나 데이터 손실을 일으킬 수 있는 문제)
+
+[중요개선]
+(사용성, 안정성, 유지보수성을 높일 수정)
+
+[UX개선]
+(사용자가 헷갈리거나 막힐 지점)
+
+[수정우선순위]
+(1순위부터 실행 가능한 작업 목록)
+
+[배포판단]
+(개인용/베타공유/일반공개 중 어느 수준인지)
+
+[합의율분석]
+(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX% — 단, 이는 통계 계산값이 아니라 의견 수렴 정도에 대한 해석값)`
+  },
+  present: {
+    label:'발표·설득 자료',
+    context:'발표·설득 자료 검토',
+    hint:'발표 대상, 목적, 핵심 메시지, 현재 구성, 청중의 우려나 반론을 입력하세요.',
+    guide:`• 청중의 관심사, 반대 논리, 핵심 메시지, 흐름의 설득력을 점검하세요.
+• 첫 30초 도입, 핵심 근거, 결론의 행동 요청을 강화하세요.
+• 발표자가 실제 말할 수 있는 문장으로 바꾸세요.`,
+    final:`[설득전략]
+(청중을 움직일 핵심 메시지)
+
+[도입개선]
+(첫 30초에 사용할 말과 문제 제기)
+
+[근거구성]
+(자료·사례·논리의 배열)
+
+[예상반론]
+(청중이 가질 의문과 대응)
+
+[마무리문장]
+(행동 요청 또는 결론 멘트)
+
+[수정우선순위]
+(자료에서 먼저 고칠 부분)
+
+[합의율분석]
+(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX% — 단, 이는 통계 계산값이 아니라 의견 수렴 정도에 대한 해석값)`
+  },
+  life: {
+    label:'인생·진로 결정',
+    context:'인생·진로 의사결정',
+    hint:'고민하는 선택지, 현재 상황, 감정, 현실 조건, 장기 목표, 걱정되는 점을 입력하세요.',
+    guide:`• 감정적 만족, 현실 조건, 장기 리스크, 되돌릴 수 있는 선택인지 나누어 판단하세요.
+• 지금 결정해야 하는 것과 더 정보를 모아도 되는 것을 구분하세요.
+• 후회 최소화 관점에서 선택 기준을 제시하세요.`,
+    final:`[결정요약]
+(현재 선택을 실행/보류/부분실행/추가탐색 중 무엇으로 볼지 요약)
+
+[선택기준]
+(무엇을 가장 중요하게 봐야 하는지)
+
+[선택지별장단점]
+(각 선택의 이득, 비용, 되돌릴 수 있는 정도)
+
+[후회가능성]
+(어떤 경우 후회할 가능성이 큰지)
+
+[지금할일]
+(이번 주 안에 확인하거나 실행할 일)
+
+[보류조건]
+(아직 결정하지 말아야 할 조건)
+
+[합의율분석]
+(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX% — 단, 이는 통계 계산값이 아니라 의견 수렴 정도에 대한 해석값)`
+  }
 };
 
 let activePreset = 'invest';
@@ -370,17 +664,20 @@ let steps = [];
 let results = {}; // aiId → { r1, r2, r3, score }
 let finalData = {};
 let topic = '', ctx = '';
-const STORAGE_KEY = 'ai_meeting_v7';
+const STORAGE_KEY = 'ai_meeting_v11_2';
+let meetingStarted = false;
 
 // ── UI 이벤트 ──
 function setPreset(el) {
+  if (meetingStarted && steps.length) { showToast('토론 중에는 회의 타입을 바꿀 수 없습니다'); return; }
   document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   activePreset = el.dataset.preset;
-  const p = PRESETS[activePreset];
+  const p = getPreset();
   document.getElementById('context').placeholder = p.hint;
 }
 function setR(n, btn) {
+  if (meetingStarted && steps.length) { showToast('토론 중에는 라운드 수를 바꿀 수 없습니다'); return; }
   rounds = n;
   document.querySelectorAll('.rb').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
@@ -389,6 +686,7 @@ document.querySelectorAll('.ai-tog').forEach(lbl => {
   lbl.addEventListener('click', e => {
     // label 기본 동작과 수동 토글이 겹치면 체크 상태와 화면 표시가 어긋날 수 있어 기본 동작을 차단한다.
     e.preventDefault();
+    if (meetingStarted && steps.length) { showToast('토론 중에는 참여 AI를 바꿀 수 없습니다'); return; }
     const cb = lbl.querySelector('input');
     cb.checked = !cb.checked;
     lbl.classList.toggle('on', cb.checked);
@@ -397,37 +695,71 @@ document.querySelectorAll('.ai-tog').forEach(lbl => {
 });
 
 // ── 프롬프트 생성 ──
-const PRESET_CONTEXT = {
-  invest:   '투자 분석',
-  policy:   '정책 검토',
-  setech:   '세특 리라이팅',
-  research: '탐구활동 설계',
-  prompt:   '프롬프트 개선',
-  program:  '프로그램/코드 개선',
-  present:  '설명회 자료 작성',
-};
+function getPreset() {
+  return PRESETS[activePreset] || PRESETS.invest;
+}
 
-function getProgramNote() {
-  return activePreset === 'program'
-    ? '\n💻 프로그램 개선 모드 특수 지침: 기능 누락, UX 병목, 코드 안정성, 저장/복원, 오류 가능성, 다음 버전 우선순위를 반드시 점검하세요. 코드 수정 아이디어는 실행 가능한 단위로 제시하세요.'
-    : '';
+function getPresetContext() {
+  return getPreset().context || getPreset().label || '의사결정 검토';
+}
+
+function getPresetGuide() {
+  const p = getPreset();
+  return p.guide ? `
+📌 회의 타입별 분석 기준:
+${p.guide}` : '';
+}
+
+function getPresetFinalFormat() {
+  const p = getPreset();
+  return p.final || `[지금당장]
+(즉시 실행해야 할 구체적 행동)
+
+[하지말것]
+(반드시 피해야 할 행동)
+
+[확신영역]
+(강하게 동의한 내용)
+
+[불확실영역]
+(아직 모르는 부분)
+
+[재검토시점]
+(다음 판단 조건)
+
+[합의율분석]
+(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX%)`;
+}
+
+// Round 1: 순수 독립 분석
+function getAttachNotice() {
+  if (!attachedFiles || !attachedFiles.length) return '';
+  const lines = attachedFiles.map(f => {
+    if (f.fileType === 'image') {
+      return `  • [이미지] ${f.name}`;
+    } else {
+      return `  • [파일] ${f.name}`;
+    }
+  }).join('\n');
+  return `\n⚠️ 【첨부 파일 필수 확인】\n이 프롬프트에는 아래 첨부 파일이 포함되어 있습니다.\n텍스트 프롬프트만으로는 파일 내용이 전달되지 않으므로,\n이 대화창에 아래 파일을 직접 첨부한 후 분석을 시작하세요.\n\n${lines}\n\n파일을 첨부하지 않으면 정확한 분석이 불가능합니다.\n━━━━━━━━━━━━━━━━━━━━\n`;
 }
 
 function pr1(aiId) {
   const a = AI[aiId];
-  const mode = PRESET_CONTEXT[activePreset];
-  const perplexNote = aiId === 'perplexity'
-    ? '\n⚡ 당신의 특수 임무: 최신 기사·데이터·실적 기준으로 분석하고, 사용한 정보의 출처(연도 포함)를 반드시 명시하세요. outdated 정보 사용 시 스스로 경고하세요.'
-    : '';
-  const programNote = getProgramNote();
-  return `당신은 "${a.name}" AI입니다.
-역할: ${a.role}${perplexNote}${programNote}
+  const mode = getPresetContext();
+  const aiNote = getAINote(aiId, false);
+  const typeGuide = getPresetGuide();
+  const attachNotice = getAttachNotice();
+  return `${attachNotice}당신은 "${a.name}" AI입니다.
+역할: ${a.role}${aiNote}${typeGuide}
 
 [회의 유형] ${mode}
 [주제] ${topic}
 ${ctx ? '[배경 자료]\n' + ctx + '\n' : ''}
 ━━ 지침 ━━
+• 모든 답변은 반드시 한국어로 작성하세요. 영어 자료를 참고하더라도 최종 출력은 한국어로 정리하세요.
 • 다른 AI의 의견을 보지 않은 상태에서 독립적으로 분석
+• 반드시 사실과 데이터에 근거하여 냉정하게 판단하세요. 감정이나 직관이 아닌 검증 가능한 근거만 사용하세요.
 • 핵심 주장 2~3가지 + 근거 + 주요 우려/기회 → 300자 이내
 • 마지막에 반드시 아래 형식으로 자기 평가를 추가:
 
@@ -438,95 +770,84 @@ ${ctx ? '[배경 자료]\n' + ctx + '\n' : ''}
 과신위험: X/10`;
 }
 
-function pr2(aiId) {
+// Round 2~N: 타 AI 의견 종합 참고 후 독립 입장 재정립
+function prReflect(aiId, roundNum) {
   const a = AI[aiId];
-  const mode = PRESET_CONTEXT[activePreset];
-  const others = selectedAIs.filter(id=>id!==aiId)
-    .map(id=>`[${AI[id].name}의 분석]\n${results[id]?.r1||'(미입력)'}`)
+  const mode = getPresetContext();
+  const prevKey = 'r' + (roundNum - 1);
+  const myPrev = results[aiId]?.[prevKey] || '(미입력)';
+  const others = selectedAIs.filter(id => id !== aiId)
+    .map(id => `[${AI[id].name}의 Round ${roundNum-1} 의견]\n${results[id]?.[prevKey] || '(미입력)'}`)
     .join('\n\n');
-  const perplexNote = aiId === 'perplexity'
-    ? '\n⚡ 당신의 특수 임무: 다른 AI들의 주장 중 사실 오류·outdated 정보를 최신 자료로 구체적으로 반박하세요. 단순 의견 비판이 아닌 팩트체크 중심으로.'
-    : '';
-  const programNote = getProgramNote();
+  const aiNote = getAINote(aiId, true);
+  const typeGuide = getPresetGuide();
+
   return `당신은 "${a.name}" AI입니다.
-역할: ${a.role}${perplexNote}${programNote}
+역할: ${a.role}${aiNote}${typeGuide}
 
 [회의 유형] ${mode} / [주제] ${topic}
 
-━━ 다른 AI들의 Round 1 분석 ━━
+━━ 당신의 Round ${roundNum-1} 의견 ━━
+${myPrev}
+
+━━ 다른 AI들의 Round ${roundNum-1} 의견 (참고용) ━━
 ${others}
 
-━━ 비판 지침 (칭찬 금지, 반드시 4항목 모두 작성) ━━
-1. 틀렸거나 과장된 사실 (구체적 근거 포함)
-2. 누락된 리스크
-3. 실행 불가능한 부분
-4. 더 나은 대안
+━━ Round ${roundNum} 지침 ━━
+• 모든 답변은 반드시 한국어로 작성하세요. 영어 자료를 참고하더라도 최종 출력은 한국어로 정리하세요.
+• 위 다른 AI들의 의견을 충분히 검토하세요.
+• 절대로 다른 AI들의 의견에 휩쓸리거나 동조하지 마세요. 다수 의견이라고 해서 옳은 것이 아닙니다.
+• 반드시 사실과 데이터에 근거하여 냉정하게 판단하세요. 감정·직관·분위기가 아닌 검증 가능한 근거만 사용하세요.
+• 타 AI 의견 중 사실에 부합하는 부분만 선별적으로 수용하고, 근거가 부족한 주장은 단호히 배제하세요.
+• 입장을 바꾼다면 반드시 "어떤 사실/데이터 때문에 바꾸는지" 명시하세요.
+• 입장을 유지한다면 "왜 타 AI 의견에도 불구하고 유지하는지" 근거를 강화하세요.
+• 다른 AI들이 놓친 관점이 있다면 추가로 제시하세요.
+• 300자 이내로 작성하세요.
 
-200자 이내. 마지막에 [신뢰도 자가평가] 동일 형식으로 추가.`;
+마지막에 반드시 아래 형식으로 자기 평가를 추가:
+
+[신뢰도 자가평가]
+근거강도: X/10
+실행가능성: X/10
+장기지속성: X/10
+과신위험: X/10`;
 }
 
-function pr3(aiId) {
-  const a = AI[aiId];
-  const mode = PRESET_CONTEXT[activePreset];
-  const myCrit = results[aiId]?.r2 || '';
-  const onMe = selectedAIs.filter(id=>id!==aiId)
-    .map(id=>`[${AI[id].name}의 비판]\n${results[id]?.r2||'(미입력)'}`)
-    .join('\n\n');
-  return `당신은 "${a.name}" AI입니다.
-역할: ${a.role}
-
-[주제] ${topic}
-
-${myCrit?'[내가 한 비판]\n'+myCrit+'\n\n':''}${onMe?'[나에 대한 비판]\n'+onMe+'\n\n':''}━━ 수정안 지침 ━━
-• 타당한 비판은 수용, 옳은 입장은 유지
-• 입장 변경 시 이유 명시
-• 200자 이내
-
-마지막에 [신뢰도 자가평가] 동일 형식으로 추가.`;
-}
-
+// Final: 각 AI의 최종 결론을 모아 종합 정리
 function prFinal() {
   const nonFinalRounds = steps.filter(s => !s.isFinal).map(s => s.round);
   const maxRound = nonFinalRounds.length ? Math.max(...nonFinalRounds) : rounds;
   const lastKey = 'r' + maxRound;
-  const all = selectedAIs.map(id =>
-    `[${AI[id].name} — ${AI[id].role.split('.')[0]}]\n${results[id]?.[lastKey]||results[id]?.r1||'(미입력)'}`
-  ).join('\n\n');
 
-  return `아래는 "${topic}"에 대한 ${selectedAIs.length}개 AI의 최종 의견입니다.
-[회의 유형] ${PRESET_CONTEXT[activePreset]}
+  // 전 라운드 흐름 요약 포함
+  const allRoundKeys = [];
+  for (let r = 1; r <= maxRound; r++) allRoundKeys.push('r'+r);
+
+  const all = selectedAIs.map(id => {
+    const roundSummary = allRoundKeys.map(k =>
+      results[id]?.[k] ? `  [R${k.replace('r','')}] ${results[id][k].split('\n')[0]}` : ''
+    ).filter(Boolean).join('\n');
+    return `[${AI[id].name} — ${AI[id].role.split('.')[0]}]\n라운드별 흐름:\n${roundSummary}\n\n최종 의견:\n${results[id]?.[lastKey] || results[id]?.r1 || '(미입력)'}`;
+  }).join('\n\n━━━━━━━━━━━━━━━━━━━━\n\n');
+
+  return `아래는 "${topic}"에 대한 ${selectedAIs.length}개 AI의 ${maxRound}라운드 토론 결과입니다.
+[회의 유형] ${getPresetContext()}
 
 ${all}
 
 ━━━━━━━━━━━━━━━━━━━━
-아래 6개 항목을 정확히 이 형식으로만 출력하세요. 각 항목 2~3문장.
+위 내용을 바탕으로 아래 [회의 타입별 최종 출력 형식]을 정확히 지켜 출력하세요.
+모든 답변은 반드시 한국어로 작성하세요.
+각 항목은 2~3문장으로 정리하되, 필요한 경우 표나 번호 목록을 사용해도 됩니다.
+합의율은 통계 계산값이 아니라 의견 수렴 정도에 대한 해석 기반 참고 지표임을 전제로 작성하세요.
 
-[지금당장]
-(즉시 실행해야 할 구체적 행동)
-
-[하지말것]
-(반드시 피해야 할 행동)
-
-[확신영역]
-(AI들이 강하게 동의한 내용)
-
-[불확실영역]
-(아직 모르거나 AI들이 불일치한 부분)
-
-[재검토시점]
-(다음에 다시 판단해야 할 조건·시기)
-
-[합의율분석]
-(강한합의: 어떤 내용 / 부분합의: 어떤 내용 / 불일치: 어떤 내용 / 전체합의율: XX%)
-
-[다음버전개선]
-(프로그램·프롬프트·문서 개선이 필요한 경우, 다음 버전에 반영할 수정사항 3~5개. 해당 없으면 '없음')`;
+[회의 타입별 최종 출력 형식]
+${getPresetFinalFormat()}`;
 }
 
 // ── 신뢰도 파싱 ──
 function parseScore(text) {
   const s = { 근거강도:null, 실행가능성:null, 장기지속성:null, 과신위험:null };
-  const map = { '근거강도':'근거강도','실행가능성':'실행가능성','장기지속성':'장기지속성','과신위험':'과신위험' };
   Object.keys(s).forEach(k => {
     const m = text.match(new RegExp(k+'[:\\s]+([0-9]+)'));
     if (m) s[k] = parseInt(m[1]);
@@ -540,9 +861,13 @@ function buildSteps() {
   results = {};
   selectedAIs.forEach(id => { results[id] = {}; });
 
+  // Round 1: 독립 분석
   selectedAIs.forEach(id => steps.push({ aiId:id, round:1, key:'r1', done:false }));
-  if (rounds >= 2) selectedAIs.forEach(id => steps.push({ aiId:id, round:2, key:'r2', done:false, needsBuild:true }));
-  if (rounds >= 3) selectedAIs.forEach(id => steps.push({ aiId:id, round:3, key:'r3', done:false, needsBuild:true }));
+  // Round 2~N: 독립 입장 재정립
+  for (let r = 2; r <= rounds; r++) {
+    selectedAIs.forEach(id => steps.push({ aiId:id, round:r, key:'r'+r, done:false, needsBuild:true }));
+  }
+  // 최종 종합
   steps.push({ aiId:'__final__', round:99, key:'final', done:false, isFinal:true, needsBuild:true });
 }
 
@@ -555,10 +880,17 @@ function start() {
 
   // 첨부 파일 내용을 ctx에 통합
   if (attachedFiles.length > 0) {
+    const hasImageWithoutDesc = attachedFiles.some(f => f.fileType === 'image' && !(f.desc || '').trim());
+    if (hasImageWithoutDesc) {
+      showToast('이미지 설명이 없으면 각 AI 창에 원본 이미지를 직접 첨부해야 합니다');
+    }
     const fileTexts = attachedFiles.map(f => {
       if (f.fileType === 'image') {
-        const desc = document.getElementById('imgdesc-'+f.id)?.value.trim() || '';
-        return `\n\n─── [첨부 이미지: ${f.name}] ───\n${desc ? '이미지 내용/설명: ' + desc : '(이미지 파일 — 각 AI 창에서 직접 이미지를 첨부하여 분석 요청)'}`;
+        const desc = (f.desc || '').trim();
+        return `\n\n─── [첨부 이미지: ${f.name}] ───\n` +
+          (desc
+            ? `이미지 내용/설명: ${desc}`
+            : `⚠️ 이미지 전달 주의: 이 프롬프트 텍스트만으로는 이미지 파일 자체가 전달되지 않습니다.\n사용자는 이 AI 대화창에 원본 이미지 파일(${f.name})을 직접 첨부해야 합니다.\n이미지가 현재 대화창에 실제로 보이지 않는다면, 파일명만 보고 추정하지 말고 원본 이미지 첨부를 요청하세요.`);
       } else {
         return `\n\n─── [첨부 파일: ${f.name}] ───\n${f.content}`;
       }
@@ -567,6 +899,8 @@ function start() {
   }
 
   buildSteps();
+  meetingStarted = true;
+  syncUIState();
   document.getElementById('emptyState').classList.add('hidden');
   document.getElementById('flowArea').classList.remove('hidden');
   document.getElementById('finalArea').classList.add('hidden');
@@ -576,110 +910,281 @@ function start() {
 }
 
 // ── 렌더 ──
-const ROUND_INFO = {
-  1:{ label:'Round 1 · 독립 분석', desc:'각 AI 독립 분석 + 신뢰도 자가평가' },
-  2:{ label:'Round 2 · 교차 비판', desc:'상호 비판 (칭찬 금지)' },
-  3:{ label:'Round 3 · 수정안',    desc:'비판 수용·반영 최종 수정' },
-};
+function getRoundInfo(r) {
+  if (r === 1) return { label:'Round 1 · 독립 분석', desc:'각 AI 독립 분석 + 신뢰도 자가평가' };
+  return { label:`Round ${r} · 독립 입장 재정립`, desc:`타 AI 의견 참고 후 자기 입장 유지/강화 (R${r-1} 기반)` };
+}
 
 function getPrompt(step) {
   if (step.isFinal) return prFinal();
   if (step.round === 1) return pr1(step.aiId);
-  if (step.round === 2) return pr2(step.aiId);
-  if (step.round === 3) return pr3(step.aiId);
+  return prReflect(step.aiId, step.round);
+}
+
+// 현재 활성 라운드 번호 반환 (미완료 스텝 중 가장 작은 round)
+function getCurrentRound() {
+  const unfinished = steps.filter(s => !s.done && !s.isFinal);
+  if (!unfinished.length) return null;
+  return Math.min(...unfinished.map(s => s.round));
+}
+
+// textarea 임시값 저장 (render 재호출 시 입력 내용 보존)
+let _draftCache = {};
+function saveDrafts() {
+  document.querySelectorAll('.res-ta').forEach(ta => {
+    if (ta.value) _draftCache[ta.id] = ta.value;
+    const parts = ta.id.split('-');
+    if (parts[0] === 'ta' && parts.length >= 3) {
+      const r = parseInt(parts[1], 10);
+      const aiId = parts.slice(2).join('-');
+      const step = steps.find(s => s.round === r && s.aiId === aiId);
+      if (step) step.draftResponse = ta.value;
+    } else if (ta.id === 'ta-final') {
+      const finalStep = steps.find(s => s.isFinal);
+      if (finalStep) finalStep.draftResponse = ta.value;
+    }
+  });
+}
+function restoreDrafts() {
+  Object.entries(_draftCache).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el && !el.value) el.value = val;
+  });
+  _draftCache = {};
 }
 
 function render() {
+  saveDrafts();
   const fc = document.getElementById('flowContent');
   fc.innerHTML = '';
-  let lastRound = 0;
 
-  steps.forEach((step, idx) => {
-    const isDone    = step.done;
-    const isCurrent = !isDone && steps.slice(0,idx).every(s=>s.done);
-    const status    = isDone ? 'done' : isCurrent ? 'cur' : '';
+  const activeRound = getCurrentRound();
 
-    if (isCurrent && step.needsBuild) {
-      step.prompt = getPrompt(step);
-      step.needsBuild = false;
-    }
+  // ── 완료된 라운드 표시 (접힌 형태) ──
+  const doneRounds = [...new Set(steps.filter(s => s.done && !s.isFinal).map(s => s.round))];
+  doneRounds.forEach(r => {
+    const ri = getRoundInfo(r);
+    const hdr = document.createElement('div');
+    hdr.className = 'rh';
+    hdr.innerHTML = `<span class="rh-num">ROUND ${r}</span><span class="rh-title">${ri.label}</span><span class="rh-desc" style="color:var(--gp)">✅ 완료</span>`;
+    fc.appendChild(hdr);
 
-    // Round header
-    if (!step.isFinal && step.round !== lastRound) {
-      lastRound = step.round;
-      const ri = ROUND_INFO[step.round];
-      const hdr = document.createElement('div');
-      hdr.className = 'rh';
-      hdr.innerHTML = `<span class="rh-num">ROUND ${step.round}</span><span class="rh-title">${ri.label}</span><span class="rh-desc">${ri.desc}</span>`;
-      fc.appendChild(hdr);
-    }
-    if (step.isFinal) {
-      const hdr = document.createElement('div');
-      hdr.className = 'rh';
-      hdr.innerHTML = `<span class="rh-num">FINAL</span><span class="rh-title">합의안 생성</span><span class="rh-desc">아무 AI에 붙여넣고 결과 입력</span>`;
-      fc.appendChild(hdr);
-    }
-
-    const card = document.createElement('div');
-    card.className = `sc ${status}`;
-    card.id = 'sc-'+idx;
-
-    const ai = step.isFinal ? null : AI[step.aiId];
-    const stLabel = { done:'완료', cur:'진행 중', '':'대기 중' }[status];
-    const stCls   = { done:'d',   cur:'c',       '':'w' }[status];
-
-    let headHtml = '';
-    if (step.isFinal) {
-      headHtml = `<span class="ai-badge" style="background:var(--gp-d);color:var(--gp);border:1px solid var(--gp-b)">합의안</span>
-        <span class="sc-lbl">최종 실행 판단 생성</span>`;
-    } else {
-      headHtml = `<span class="ai-badge" style="background:${ai.dim};color:${ai.color};border:1px solid ${ai.bdr}">${ai.emoji} ${ai.name}</span>
-        <span class="sc-lbl">${ai.role.split('.')[0]}</span>`;
-    }
-
-    let bodyHtml = '';
-    if (isCurrent || isDone) {
-      const promptHtml = `
-        <div>
-          <div class="mini-label">📋 복사할 프롬프트</div>
-          <div class="prompt-box">${esc(step.prompt||'')}</div>
-        </div>
-        <div class="btn-row">
-          <button class="cp-btn" id="cpb-${idx}" onclick="copyP(${idx})">📋 프롬프트 복사</button>
-          ${step.isFinal
-            ? selectedAIs.map(id=>`<a class="open-link" href="${AI[id].url}" target="_blank" style="background:${AI[id].dim};color:${AI[id].color};border-color:${AI[id].bdr}">${AI[id].emoji} ${AI[id].name}</a>`).join('')
-            : `<a class="open-link" href="${ai.url}" target="_blank" style="background:${ai.dim};color:${ai.color};border-color:${ai.bdr}">${ai.emoji} ${ai.name} 열기</a>`
-          }
-        </div>`;
-
-      // 신뢰도 점수 표시 (done 상태이고 점수가 있을 때)
+    const grid = document.createElement('div');
+    grid.className = 'round-cards';
+    steps.filter(s => s.round === r && !s.isFinal).forEach((step, i) => {
+      const ai = AI[step.aiId];
       let scoreHtml = '';
-      if (isDone && !step.isFinal && results[step.aiId]?.score) {
-        const sc = results[step.aiId].score;
-        scoreHtml = renderScoreHtml(sc, ai.color);
-      }
-
-      const inputHtml = isDone
-        ? `<div><div class="mini-label">✅ 입력된 답변</div><div class="saved-box">${esc(step.response||'')}</div></div>${scoreHtml}`
-        : `<div class="ta-wrap">
-            <div class="mini-label">✏️ ${step.isFinal ? '합의안' : ai.name+'의 답변'} 붙여넣기</div>
-            <textarea class="res-ta" id="ta-${idx}" placeholder="${step.isFinal ? '최종 합의안을 붙여넣으세요…' : ai.name+'의 답변을 붙여넣으세요…'}"></textarea>
-            <div class="word-meta"><span>Ctrl+Enter = 완료</span><span id="wm-${idx}">0자</span></div>
-            <button class="ok-btn" style="background:${step.isFinal?'var(--gp)':ai.color};color:#000a" onclick="confirm(${idx})">완료 →</button>
-          </div>`;
-
-      bodyHtml = `<div class="sc-body">${promptHtml}${inputHtml}</div>`;
-    }
-
-    card.innerHTML = `<div class="sc-head">${headHtml}<button class="collapse-btn" onclick="toggleCard(${idx})">▾</button><span class="sc-st ${stCls}">${stLabel}</span></div>${bodyHtml}`;
-    fc.appendChild(card);
-
-    if (idx < steps.length-1) {
-      const conn = document.createElement('div'); conn.className='conn'; fc.appendChild(conn);
-    }
+      if (results[step.aiId]?.score) scoreHtml = renderScoreHtml(results[step.aiId].score, ai.color);
+      const card = document.createElement('div');
+      card.className = 'sc done';
+      card.id = 'sc-r'+r+'-'+step.aiId;
+      card.innerHTML = `
+        <div class="sc-head">
+          <span class="ai-badge" style="background:${ai.dim};color:${ai.color};border:1px solid ${ai.bdr}">${ai.emoji} ${ai.name}</span>
+          <span class="sc-lbl">${ai.role.split('.')[0]}</span>
+          <button class="collapse-btn" onclick="this.closest('.sc').classList.toggle('collapsed')">▾</button>
+          <span class="sc-st d">완료</span>
+        </div>
+        <div class="sc-body">
+          <div><div class="mini-label">✅ 입력된 답변</div><div class="saved-box">${esc(step.response||'')}</div></div>
+          ${scoreHtml}
+        </div>`;
+      grid.appendChild(card);
+    });
+    fc.appendChild(grid);
   });
 
+  // ── 현재 활성 라운드 — 4개 동시 표시 ──
+  if (activeRound !== null) {
+    const ri = getRoundInfo(activeRound);
+    const roundSteps = steps.filter(s => s.round === activeRound && !s.isFinal);
+
+    // 프롬프트 미리 생성
+    roundSteps.forEach(s => {
+      if (!s.prompt || s.needsBuild) { s.prompt = getPrompt(s); s.needsBuild = false; }
+    });
+
+    // 라운드 헤더
+    const hdr = document.createElement('div');
+    hdr.className = 'rh';
+    hdr.innerHTML = `<span class="rh-num">ROUND ${activeRound}</span><span class="rh-title">${ri.label}</span><span class="rh-desc">${ri.desc}</span>`;
+    fc.appendChild(hdr);
+
+    // 액션 바 (전체 복사 + 완료 버튼)
+    const bar = document.createElement('div');
+    bar.className = 'round-action-bar';
+    bar.id = 'round-bar-'+activeRound;
+    bar.innerHTML = `
+      <button class="round-copy-btn" id="rcpb-${activeRound}" onclick="copyRoundPrompts(${activeRound})">📋 이번 라운드 프롬프트 전체 복사</button>
+      <span class="round-missing" id="rmiss-${activeRound}"></span>
+      <button class="round-done-btn" onclick="confirmRound(${activeRound})">Round ${activeRound} 전체 완료 →</button>`;
+    fc.appendChild(bar);
+
+    // 카드 2열 그리드
+    const grid = document.createElement('div');
+    grid.className = 'round-cards';
+    roundSteps.forEach(step => {
+      const ai = AI[step.aiId];
+      const taId = 'ta-'+activeRound+'-'+step.aiId;
+      const card = document.createElement('div');
+      card.className = 'sc cur';
+      card.id = 'sc-r'+activeRound+'-'+step.aiId;
+      card.innerHTML = `
+        <div class="sc-head">
+          <span class="ai-badge" style="background:${ai.dim};color:${ai.color};border:1px solid ${ai.bdr}">${ai.emoji} ${ai.name}</span>
+          <span class="sc-lbl">${ai.role.split('.')[0]}</span>
+          <button class="cp-btn" id="cpb-r${activeRound}-${step.aiId}" onclick="copyRoundOnePrompt('${step.aiId}',${activeRound})" style="margin-left:auto;font-size:11px;padding:4px 9px">📋 복사</button>
+          <span class="sc-st c">진행 중</span>
+        </div>
+        <div class="sc-body">
+          <div>
+            <div class="mini-label">📋 복사할 프롬프트</div>
+            <div class="prompt-box">${esc(step.prompt||'')}</div>
+          </div>
+          <div class="ta-wrap">
+            <div class="mini-label">✏️ ${ai.name}의 답변 붙여넣기</div>
+            <textarea class="res-ta" id="${taId}" placeholder="${ai.name}의 답변을 붙여넣으세요…">${escRaw(step.draftResponse || '')}</textarea>
+            <div class="word-meta"><span style="color:var(--t3)">답변 입력 후 아래 [Round ${activeRound} 전체 완료]를 누르세요</span><span id="wm-${taId}">0자</span></div>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+    fc.appendChild(grid);
+  }
+
+  // ── Final 스텝 ──
+  const finalStep = steps.find(s => s.isFinal);
+  if (finalStep && activeRound === null) {
+    if (!finalStep.prompt || finalStep.needsBuild) { finalStep.prompt = getPrompt(finalStep); finalStep.needsBuild = false; }
+    const hdr = document.createElement('div');
+    hdr.className = 'rh';
+    hdr.innerHTML = `<span class="rh-num">FINAL</span><span class="rh-title">최종 결론 종합</span><span class="rh-desc">각 AI의 최종 입장 + 라운드별 변화 분석</span>`;
+    fc.appendChild(hdr);
+
+    if (finalStep.done) {
+      // 이미 완료
+    } else {
+      const card = document.createElement('div');
+      card.className = 'sc cur';
+      card.innerHTML = `
+        <div class="sc-head">
+          <span class="ai-badge" style="background:var(--gp-d);color:var(--gp);border:1px solid var(--gp-b)">합의안</span>
+          <span class="sc-lbl">최종 실행 판단 생성</span>
+          <span class="sc-st c">진행 중</span>
+        </div>
+        <div class="sc-body">
+          <div>
+            <div class="mini-label">📋 복사할 프롬프트</div>
+            <div class="prompt-box">${esc(finalStep.prompt||'')}</div>
+          </div>
+          <div class="btn-row">
+            <button class="cp-btn" id="cpb-final" onclick="copyFinalPrompt()">📋 프롬프트 복사</button>
+          </div>
+          <div class="ta-wrap">
+            <div class="mini-label">✏️ 합의안 붙여넣기</div>
+            <textarea class="res-ta" id="ta-final" placeholder="최종 합의안을 붙여넣으세요…">${escRaw(finalStep.draftResponse || '')}</textarea>
+            <div class="word-meta"><span>Ctrl+Enter = 완료</span><span id="wm-ta-final">0자</span></div>
+            <button class="ok-btn" style="background:var(--gp);color:#fff;align-self:flex-end" onclick="confirmFinal()">완료 →</button>
+          </div>
+        </div>`;
+      fc.appendChild(card);
+    }
+  }
+
+  restoreDrafts();
   updateProgress();
+}
+
+// ── 라운드 전체 복사 ──
+async function copyRoundPrompts(r) {
+  const roundSteps = steps.filter(s => s.round === r && !s.isFinal);
+  const text = roundSteps.map(s => {
+    if (!s.prompt) s.prompt = getPrompt(s);
+    return `===== ${AI[s.aiId].emoji} ${AI[s.aiId].name} =====\n${s.prompt}`;
+  }).join('\n\n');
+  try {
+    await copyText(text);
+    const btn = document.getElementById('rcpb-'+r);
+    if (btn) { btn.classList.add('ok'); btn.textContent='✓ 전체 복사됨'; setTimeout(()=>{ btn.classList.remove('ok'); btn.textContent='📋 이번 라운드 프롬프트 전체 복사'; },2200); }
+  } catch(e) { showToast('복사 실패: 브라우저 권한을 확인하세요'); }
+}
+
+async function copyRoundOnePrompt(aiId, r) {
+  const step = steps.find(s => s.aiId === aiId && s.round === r);
+  if (!step) return;
+  if (!step.prompt) step.prompt = getPrompt(step);
+  try {
+    await copyText(step.prompt);
+    const btn = document.getElementById(`cpb-r${r}-${aiId}`);
+    if (btn) { btn.classList.add('ok'); btn.textContent='✓'; setTimeout(()=>{ btn.classList.remove('ok'); btn.textContent='📋 복사'; },2200); }
+  } catch(e) { showToast('복사 실패'); }
+}
+
+async function copyFinalPrompt() {
+  const finalStep = steps.find(s => s.isFinal);
+  if (!finalStep) return;
+  try {
+    await copyText(finalStep.prompt || '');
+    const btn = document.getElementById('cpb-final');
+    if (btn) { btn.classList.add('ok'); btn.textContent='✓ 복사됨'; setTimeout(()=>{ btn.classList.remove('ok'); btn.textContent='📋 프롬프트 복사'; },2200); }
+  } catch(e) { showToast('복사 실패'); }
+}
+
+// ── 라운드 전체 완료 ──
+function confirmRound(r) {
+  const roundSteps = steps.filter(s => s.round === r && !s.isFinal);
+  const missing = [];
+  roundSteps.forEach(step => {
+    const taId = 'ta-'+r+'-'+step.aiId;
+    const val = (document.getElementById(taId)?.value || '').trim();
+    if (!val) missing.push(AI[step.aiId].name);
+  });
+
+  if (missing.length) {
+    const missEl = document.getElementById('rmiss-'+r);
+    if (missEl) missEl.textContent = '⚠ 답변 없음: ' + missing.join(', ');
+    showToast('아직 답변이 없는 AI가 있습니다: ' + missing.join(', '));
+    return;
+  }
+
+  roundSteps.forEach(step => {
+    const taId = 'ta-'+r+'-'+step.aiId;
+    const val = (document.getElementById(taId)?.value || '').trim();
+    step.response = val;
+    step.done = true;
+    step.draftResponse = '';
+    results[step.aiId][step.key] = val;
+    const sc = parseScore(val);
+    if (Object.values(sc).some(v => v !== null)) results[step.aiId].score = sc;
+  });
+
+  // 다음 라운드 needsBuild 설정
+  const nextRound = r + 1;
+  steps.filter(s => s.round === nextRound).forEach(s => { s.needsBuild = true; });
+
+  autoSave();
+  showToast(`Round ${r} 완료!`);
+  render();
+  setTimeout(() => {
+    const bar = document.getElementById('round-bar-'+nextRound) || document.getElementById('sc-r'+nextRound+'-'+selectedAIs[0]);
+    bar?.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 150);
+}
+
+// ── Final 완료 ──
+function confirmFinal() {
+  const val = (document.getElementById('ta-final')?.value || '').trim();
+  if (!val) { alert('합의안을 입력하세요.'); return; }
+  const finalStep = steps.find(s => s.isFinal);
+  if (!finalStep) return;
+  finalStep.response = val;
+  finalStep.done = true;
+  finalStep.draftResponse = '';
+  finalData = parseFinal(val);
+  showFinal();
+  autoSave();
+  showToast('최종 합의안 저장 완료');
+  render();
 }
 
 function renderScoreHtml(sc, color) {
@@ -728,41 +1233,9 @@ async function copyP(idx) {
   }
 }
 
-// ── 완료 ──
-function confirm(idx) {
-  const ta = document.getElementById('ta-'+idx);
-  const val = ta?.value.trim();
-  if (!val) { alert('답변을 입력하세요.'); return; }
-
-  steps[idx].response = val;
-  steps[idx].done = true;
-
-  const step = steps[idx];
-
-  if (!step.isFinal) {
-    results[step.aiId][step.key] = val;
-    // 신뢰도 파싱 — 가장 마지막 라운드 점수를 덮어씀
-    const sc = parseScore(val);
-    if (Object.values(sc).some(v=>v!==null)) {
-      results[step.aiId].score = sc;
-    }
-  } else {
-    // 합의안 파싱
-    finalData = parseFinal(val);
-    showFinal();
-  }
-
-  render();
-
-  setTimeout(()=>{
-    const ni = steps.findIndex((s,i)=>i>idx&&!s.done);
-    if (ni>=0) document.getElementById('sc-'+ni)?.scrollIntoView({behavior:'smooth',block:'start'});
-  }, 150);
-}
-
 // ── 합의율 + 최종 ──
 function parseFinal(text) {
-  const keys = ['지금당장','하지말것','확신영역','불확실영역','재검토시점','합의율분석','다음버전개선'];
+  const keys = ['판단요약','권장비중·행동','상승시나리오','하락시나리오','최종판단','구매해도 되는 조건','보류해야 하는 조건','비교대안','체크리스트','업무판단','우선순위','실행계획','설득포인트','리스크·병목','아이디어판단','핵심가치','검증실험','성공지표','중단조건','다음액션','문서진단','삭제할부분','강화할부분','구조개선안','수정예시','주의할점','핵심진단','치명오류','중요개선','UX개선','수정우선순위','배포판단','설득전략','도입개선','근거구성','예상반론','마무리문장','결정요약','선택기준','선택지별장단점','후회가능성','지금할일','보류조건','지금당장','하지말것','확신영역','불확실영역','입장변화분석','재검토시점','합의율분석'];
   const res = {};
   keys.forEach((k,i)=>{
     const next = keys[i+1];
@@ -806,19 +1279,16 @@ function showFinal() {
       ${con.disagree? `<span class="con-tag disagree">🔴 불일치: ${con.disagree}</span>` : ''}
     </div>`;
 
-  // 실전 판단
-  const items = [
-    { key:'지금당장',    num:'01', title:'지금 당장 할 행동',  color:'var(--gp)' },
-    { key:'하지말것',    num:'02', title:'하지 말아야 할 행동', color:'var(--cl)' },
-    { key:'확신영역',    num:'03', title:'확신 높은 영역',      color:'var(--gm)' },
-    { key:'불확실영역',  num:'04', title:'아직 모르는 영역',    color:'var(--px)' },
-    { key:'재검토시점',  num:'05', title:'다음 재검토 시점',    color:'var(--t2)' },
-    { key:'다음버전개선',num:'06', title:'다음 버전 개선',      color:'var(--gp)' },
-  ];
+  // 회의 타입별 최종 항목 표시
+  const finalOrder = ['판단요약','권장비중·행동','상승시나리오','하락시나리오','최종판단','구매해도 되는 조건','보류해야 하는 조건','비교대안','체크리스트','업무판단','우선순위','실행계획','설득포인트','리스크·병목','아이디어판단','핵심가치','검증실험','성공지표','중단조건','다음액션','문서진단','삭제할부분','강화할부분','구조개선안','수정예시','주의할점','핵심진단','치명오류','중요개선','UX개선','수정우선순위','배포판단','설득전략','도입개선','근거구성','예상반론','마무리문장','결정요약','선택기준','선택지별장단점','후회가능성','지금할일','보류조건','지금당장','하지말것','확신영역','불확실영역','입장변화분석','재검토시점'];
+  const items = finalOrder
+    .filter(k => finalData[k])
+    .slice(0, 8)
+    .map((k, i) => ({ key:k, num:String(i+1).padStart(2,'0'), title:k, color:i%4===0?'var(--gp)':i%4===1?'var(--cl)':i%4===2?'var(--gm)':'var(--px)' }));
 
   const grid = document.getElementById('actionGrid');
-  if (finalData['전체']) {
-    grid.innerHTML = `<div class="action-item" style="grid-column:1/-1"><div class="action-body">${esc(finalData['전체'])}</div></div>`;
+  if (finalData['전체'] || !items.length) {
+    grid.innerHTML = `<div class="action-item" style="grid-column:1/-1"><div class="action-body">${esc(finalData['전체'] || '최종 항목을 인식하지 못했습니다. 원문을 확인하세요.')}</div></div>`;
   } else {
     grid.innerHTML = items.map(it => `
       <div class="action-item">
@@ -840,13 +1310,16 @@ function updateProgress() {
 }
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+function escRaw(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 
 
 // ── v6: 일괄 입력 / 불일치 추가 토론 ──
 function showBatchPanel(){
   if(!steps.length){ showToast('먼저 토론을 시작하세요'); return; }
-  const currentRound = steps.find(s=>!s.done && !s.isFinal)?.round || 1;
+  const currentStep = steps.find(s=>!s.done && !s.isFinal);
+  if(!currentStep){ showToast('현재 일괄 입력할 AI 라운드가 없습니다'); return; }
+  const currentRound = currentStep.round;
   const roundSteps = steps.filter(s=>s.round===currentRound && !s.isFinal);
   if(!roundSteps.length){ showToast('현재 일괄 입력할 라운드가 없습니다'); return; }
 
@@ -901,7 +1374,9 @@ function saveBatchRound(r){
 }
 
 function copyCurrentRoundPrompts(){
-  const currentRound=steps.find(s=>!s.done && !s.isFinal)?.round || 1;
+  const currentStep = steps.find(s=>!s.done && !s.isFinal);
+  if(!currentStep){ showToast('현재 복사할 AI 라운드가 없습니다'); return; }
+  const currentRound=currentStep.round;
   const roundSteps=steps.filter(s=>s.round===currentRound && !s.isFinal);
   const text=roundSteps.map(s=>{
     if(!s.prompt) s.prompt=getPrompt(s);
@@ -946,18 +1421,29 @@ function appendDisagreementRound(){
     round:newRound,
     key:'r'+newRound,
     done:false,
-    prompt:`당신은 "${AI[id].name}" AI입니다.\n역할: ${AI[id].role}\n\n[추가 토론 라운드]\n주제: ${topic}\n\n아래는 이전 토론에서 합의되지 않은 쟁점입니다.\n${seed}\n\n지침:\n1. 이 쟁점에 대해서만 판단하세요.\n2. 기존 입장을 유지/수정하는 이유를 명확히 쓰세요.\n3. 실행 가능한 절충안 또는 보류 조건을 제시하세요.\n4. 250자 이내.\n\n마지막에 [신뢰도 자가평가] 동일 형식으로 추가.`
+    prompt:`당신은 "${AI[id].name}" AI입니다.\n역할: ${AI[id].role}\n\n[추가 토론 라운드]\n주제: ${topic}\n\n아래는 이전 토론에서 합의되지 않은 쟁점입니다.\n${seed}\n\n━━ 지침 ━━\n• 이 쟁점에 대해 당신의 역할 관점에서 분석하세요.\n• 다른 AI들의 의견에 휩쓸리지 말고 독립적인 입장을 유지하세요.\n• 입장을 유지하거나 바꾸는 이유를 명확히 쓰세요.\n• 실행 가능한 절충안 또는 판단 유보 조건을 제시하세요.\n• 300자 이내.\n\n마지막에 [신뢰도 자가평가] 동일 형식으로 추가.`
   }));
   if(finalIdx>=0){
     steps.splice(finalIdx,0,...newSteps);
-    steps[steps.length-1].needsBuild=true;
+    const finalStep = steps.find(s => s.isFinal);
+    if (finalStep) {
+      finalStep.done = false;
+      finalStep.response = '';
+      finalStep.prompt = '';
+      finalStep.needsBuild = true;
+    }
   } else {
     steps.push(...newSteps);
   }
+  finalData = {};
+  const finalArea = document.getElementById('finalArea');
+  if (finalArea) finalArea.classList.add('hidden');
+  document.getElementById('svMd').disabled = true;
+  document.getElementById('svHtml').disabled = true;
   hideBatchPanel();
   render();
   autoSave();
-  showToast(`Round ${newRound} 추가`);
+  showToast(`Round ${newRound} 추가 — 최종 결론을 다시 생성하세요`);
 }
 
 
@@ -1032,7 +1518,7 @@ async function _processOneFile(file) {
     showToast('이미 첨부됨: ' + file.name); return;
   }
   const id = ++_fileIdCounter;
-  const entry = { id, name: file.name, fileType: null, content: '', dataUrl: null, status: 'proc' };
+  const entry = { id, name: file.name, fileType: null, content: '', dataUrl: null, desc: '', status: 'proc' };
   attachedFiles.push(entry);
   _renderChips();
   try {
@@ -1052,7 +1538,8 @@ async function _processOneFile(file) {
   } catch(e) {
     entry.content = '[파일 읽기 실패: ' + e.message + ']';
     entry.fileType = 'text';
-    entry.status   = 'ok';
+    entry.status   = 'err';
+    showToast('파일 읽기 실패: ' + file.name);
   }
   _renderChips();
 }
@@ -1101,27 +1588,35 @@ function _renderChips() {
   attachedFiles.forEach((f, i) => {
     const wrap = document.createElement('div');
     wrap.className = 'file-chip-wrap';
+    const safeName = escRaw(f.name);
     const statusTag = f.status === 'proc'
       ? '<span class="file-status-tag fst-proc">처리 중…</span>'
-      : f.fileType === 'image'
-        ? '<span class="file-status-tag fst-img">이미지</span>'
-        : '<span class="file-status-tag fst-ok">' + _fmtSize(f.content.length) + '</span>';
+      : f.status === 'err'
+        ? '<span class="file-status-tag fst-err">읽기 실패</span>'
+        : f.fileType === 'image'
+          ? '<span class="file-status-tag fst-img">이미지</span>'
+          : '<span class="file-status-tag fst-ok">' + _fmtSize(f.content.length) + '</span>';
     const iconHtml = (f.fileType === 'image' && f.dataUrl)
       ? '<img src="' + f.dataUrl + '" class="file-chip-thumb">'
       : '<span class="file-chip-icon">' + _fileIcon(f.name) + '</span>';
     let descHtml = '';
     if (f.fileType === 'image' && f.status === 'ok') {
-      descHtml = '<div class="img-desc-area"><label>이미지 내용 설명 (선택 — 프롬프트에 포함됩니다)</label>'
-        + '<textarea class="img-desc-inp" id="imgdesc-' + f.id + '" placeholder="예: 재무제표 스크린샷 / 세특 초안 이미지 / 차트 등 — 내용을 설명해 주세요"></textarea></div>';
+      descHtml = '<div class="img-desc-area"><label>이미지 내용 설명 (강력 권장 — 없으면 각 AI 창에 직접 첨부 필요)</label>'
+        + '<textarea class="img-desc-inp" id="imgdesc-' + f.id + '" oninput="updateImageDesc(' + f.id + ', this.value)" placeholder="사진 속 표·종목·수치·화면 내용을 구체적으로 설명해 주세요.&#10;설명이 없으면 각 AI 창에 원본 이미지를 직접 첨부해야 합니다.">' + escRaw(f.desc || '') + '</textarea></div>';
     }
     wrap.innerHTML = '<div class="file-chip">'
       + iconHtml
-      + '<div class="file-chip-info"><div class="file-chip-name">' + f.name + '</div>'
+      + '<div class="file-chip-info"><div class="file-chip-name">' + safeName + '</div>'
       + '<div class="file-chip-meta">' + statusTag + '</div></div>'
       + '<button class="file-chip-rm" onclick="removeAttached(' + i + ')">✕</button>'
       + '</div>' + descHtml;
     container.appendChild(wrap);
   });
+}
+
+function updateImageDesc(id, value) {
+  const item = attachedFiles.find(f => f.id === id);
+  if (item) item.desc = value;
 }
 
 function removeAttached(i) {
@@ -1149,19 +1644,73 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),1800);
 }
 
+
+function normalizePresetKey(key){
+  const map = { policy:'work', setech:'writing', research:'idea', prompt:'writing' };
+  return PRESETS[key] ? key : (map[key] || 'invest');
+}
+
+function syncUIState(){
+  document.querySelectorAll('.preset-chip').forEach(c=>{
+    c.classList.toggle('active', c.dataset.preset === activePreset);
+  });
+  const p = PRESETS[activePreset];
+  const ctxEl = document.getElementById('context');
+  if (p && ctxEl) ctxEl.placeholder = p.hint;
+
+  document.querySelectorAll('.rb').forEach(b=>{
+    const n = parseInt((b.textContent || '').replace(/[^0-9]/g,''), 10);
+    b.classList.toggle('on', n === rounds);
+  });
+
+  document.querySelectorAll('.ai-tog').forEach(lbl=>{
+    const on = selectedAIs.includes(lbl.dataset.id);
+    lbl.classList.toggle('on', on);
+    lbl.classList.toggle('locked', meetingStarted && steps.length > 0);
+    const cb = lbl.querySelector('input');
+    if (cb) cb.checked = on;
+  });
+}
+
+function resetAll() {
+  if (!confirm('현재 세션을 모두 초기화할까요?\n저장되지 않은 내용은 사라집니다.')) return;
+  [STORAGE_KEY, 'ai_meeting_v11', 'ai_meeting_v10_3', 'ai_meeting_v10_2', 'ai_meeting_v10_1', 'ai_meeting_v10', 'ai_meeting_v5'].forEach(k => localStorage.removeItem(k));
+  steps = []; results = {}; finalData = {};
+  topic = ''; ctx = ''; meetingStarted = false;
+  _draftCache = {};
+  attachedFiles = []; _fileIdCounter = 0; _renderChips();
+  document.getElementById('topic').value = '';
+  document.getElementById('context').value = '';
+  document.getElementById('emptyState').classList.remove('hidden');
+  document.getElementById('flowArea').classList.add('hidden');
+  document.getElementById('finalArea').classList.add('hidden');
+  document.getElementById('flowContent').innerHTML = '';
+  document.getElementById('svMd').disabled = true;
+  document.getElementById('svHtml').disabled = true;
+  activePreset = 'invest'; rounds = 3;
+  selectedAIs = ['claude','gemini','gpt','perplexity'];
+  syncUIState();
+  showToast('초기화 완료');
+}
+
 function autoSave(){
-  const data={
-    activePreset, rounds, selectedAIs, steps, results, finalData, topic, ctx
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  try {
+    saveDrafts();
+    const data={
+      activePreset, rounds, selectedAIs, steps, results, finalData, topic, ctx
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {
+    console.warn('자동 저장 실패 (용량 초과 등):', e);
+  }
 }
 
 function restoreAutoSave(){
-  const raw=localStorage.getItem(STORAGE_KEY) || localStorage.getItem('ai_meeting_v5');
+  const raw=localStorage.getItem(STORAGE_KEY) || localStorage.getItem('ai_meeting_v11') || localStorage.getItem('ai_meeting_v10_3') || localStorage.getItem('ai_meeting_v10_2') || localStorage.getItem('ai_meeting_v10_1') || localStorage.getItem('ai_meeting_v10') || localStorage.getItem('ai_meeting_v5');
   if(!raw) return;
   try{
     const d=JSON.parse(raw);
-    activePreset=d.activePreset||'invest';
+    activePreset=normalizePresetKey(d.activePreset||'invest');
     rounds=d.rounds||3;
     selectedAIs=d.selectedAIs||selectedAIs;
     steps=d.steps||[];
@@ -1170,8 +1719,10 @@ function restoreAutoSave(){
     topic=d.topic||'';
     ctx=d.ctx||'';
 
+    meetingStarted = steps.length > 0;
     document.getElementById('topic').value=topic;
     document.getElementById('context').value=ctx;
+    syncUIState();
 
     if(steps.length){
       document.getElementById('emptyState').classList.add('hidden');
@@ -1200,7 +1751,7 @@ document.getElementById('sessionFile').addEventListener('change', async (e)=>{
   const txt=await f.text();
   const d=JSON.parse(txt);
 
-  activePreset=d.activePreset||'invest';
+  activePreset=normalizePresetKey(d.activePreset||'invest');
   rounds=d.rounds||3;
   selectedAIs=d.selectedAIs||selectedAIs;
   steps=d.steps||[];
@@ -1208,9 +1759,11 @@ document.getElementById('sessionFile').addEventListener('change', async (e)=>{
   finalData=d.finalData||{};
   topic=d.topic||'';
   ctx=d.ctx||'';
+  meetingStarted = steps.length > 0;
 
   document.getElementById('topic').value=topic;
   document.getElementById('context').value=ctx;
+  syncUIState();
 
   document.getElementById('emptyState').classList.add('hidden');
   document.getElementById('flowArea').classList.remove('hidden');
@@ -1227,28 +1780,31 @@ function toggleCard(idx){
 
 document.addEventListener('input',(e)=>{
   if(e.target.classList.contains('res-ta')){
-    const idx=e.target.id.split('-')[1];
-    const wm=document.getElementById('wm-'+idx);
-    if(wm) wm.textContent=e.target.value.length+'자';
+    const wmId = 'wm-'+e.target.id;
+    const wm = document.getElementById(wmId);
+    if(wm) wm.textContent = e.target.value.length+'자';
+
+    const parts = e.target.id.split('-');
+    if (parts[0] === 'ta' && parts.length >= 3) {
+      const r = parseInt(parts[1], 10);
+      const aiId = parts.slice(2).join('-');
+      const step = steps.find(s => s.round === r && s.aiId === aiId);
+      if (step) step.draftResponse = e.target.value;
+    } else if (e.target.id === 'ta-final') {
+      const finalStep = steps.find(s => s.isFinal);
+      if (finalStep) finalStep.draftResponse = e.target.value;
+    }
   }
 });
 
 document.addEventListener('keydown',(e)=>{
   if(e.ctrlKey && e.key==='Enter'){
-    const ta=document.activeElement;
+    const ta = document.activeElement;
     if(ta && ta.classList.contains('res-ta')){
-      const idx=parseInt(ta.id.split('-')[1]);
-      confirm(idx);
+      if(ta.id === 'ta-final') confirmFinal();
     }
   }
 });
-
-const _origConfirm = confirm;
-confirm = function(idx){
-  _origConfirm(idx);
-  autoSave();
-  showToast('응답 저장 완료');
-}
 
 const _origStart = start;
 start = function(){
@@ -1274,6 +1830,12 @@ if (document.readyState === 'loading') {
 }
 
 
+
+function getFinalDisplayKeys(){
+  const order = ['판단요약','권장비중·행동','상승시나리오','하락시나리오','최종판단','구매해도 되는 조건','보류해야 하는 조건','비교대안','체크리스트','업무판단','우선순위','실행계획','설득포인트','리스크·병목','아이디어판단','핵심가치','검증실험','성공지표','중단조건','다음액션','문서진단','삭제할부분','강화할부분','구조개선안','수정예시','주의할점','핵심진단','치명오류','중요개선','UX개선','수정우선순위','배포판단','설득전략','도입개선','근거구성','예상반론','마무리문장','결정요약','선택기준','선택지별장단점','후회가능성','지금할일','보류조건','지금당장','하지말것','확신영역','불확실영역','입장변화분석','재검토시점'];
+  return order.filter(k => finalData && finalData[k]);
+}
+
 // ── 저장 ──
 function dl(name, content, type) {
   const b = new Blob([content],{type}), a=document.createElement('a');
@@ -1282,45 +1844,57 @@ function dl(name, content, type) {
 
 function saveMD() {
   const date = new Date().toLocaleDateString('ko-KR');
-  let md = `# AI 회의실 v7 · 토론 결과\n\n- **주제**: ${topic}\n- **유형**: ${PRESET_CONTEXT[activePreset]}\n- **날짜**: ${date}\n- **참여AI**: ${selectedAIs.map(id=>AI[id].name).join(', ')}\n\n---\n\n`;
-  const rn={1:'Round 1 · 독립 분석',2:'Round 2 · 교차 비판',3:'Round 3 · 수정안'};
+  let md = `# AI 회의실 v11.2 · 토론 결과\n\n- **주제**: ${topic}\n- **유형**: ${getPresetContext()}\n- **날짜**: ${date}\n- **참여AI**: ${selectedAIs.map(id=>AI[id].name).join(', ')}\n- **방식**: 타 AI 의견 참고 후 독립 입장 재정립 (${rounds}라운드) · AI별 특화 렌즈 적용 · 한국어 출력 고정\n- **주의**: 합의율은 통계 계산값이 아니라 최종 요약 AI의 해석 기반 참고 지표\n\n---\n\n`;
   const rs=[...new Set(steps.filter(s=>!s.isFinal).map(s=>s.round))];
   rs.forEach(r=>{
-    md+=`## ${rn[r] || 'Round ' + r + ' · 추가 토론'}\n\n`;
+    const ri = getRoundInfo(r);
+    md+=`## ${ri.label}\n\n`;
     steps.filter(s=>s.round===r&&!s.isFinal).forEach(s=>{
       md+=`### ${AI[s.aiId].emoji} ${AI[s.aiId].name}\n\n${s.response||'(미입력)'}\n\n`;
     });
   });
   if (finalData) {
     md+=`---\n\n## 합의율 분석\n\n${finalData['합의율분석']||''}\n\n## 실전 판단 요약\n\n`;
-    ['지금당장','하지말것','확신영역','불확실영역','재검토시점','다음버전개선'].forEach(k=>{
-      if(finalData[k]) md+=`### ${k}\n\n${finalData[k]}\n\n`;
-    });
+    const keys = getFinalDisplayKeys();
+    if (keys.length) {
+      keys.forEach(k=>{
+        if(finalData[k]) md+=`### ${k}\n\n${finalData[k]}\n\n`;
+      });
+    } else if (finalData['전체']) {
+      md+=`### 전체\n\n${finalData['전체']}\n\n`;
+    }
   }
-  dl(`AI회의실_${topic.slice(0,15)}_${date}.md`, md, 'text/markdown;charset=utf-8');
+  dl(`AI회의실_v11_2_${topic.slice(0,15)}_${date}.md`, md, 'text/markdown;charset=utf-8');
 }
+
+function htmlEsc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+}
+
+const AI_HEX = { claude:'#c95e2a', gemini:'#2563c9', gpt:'#1a9e5c', perplexity:'#7c3ec9' };
 
 function saveHTML() {
   const date = new Date().toLocaleDateString('ko-KR');
   const rs=[...new Set(steps.filter(s=>!s.isFinal).map(s=>s.round))];
-  const rn={1:'Round 1 · 독립 분석',2:'Round 2 · 교차 비판',3:'Round 3 · 수정안'};
-  const roundsHTML = rs.map(r=>`<h3>${rn[r] || 'Round ' + r + ' · 추가 토론'}</h3>${steps.filter(s=>s.round===r&&!s.isFinal).map(s=>`<div class="pb"><div class="pn" style="color:${AI[s.aiId].color.replace('var(','').replace(')','')}">${AI[s.aiId].emoji} ${AI[s.aiId].name}</div><div class="pt">${(s.response||'(미입력)').replace(/\n/g,'<br>')}</div></div>`).join('')}`).join('');
-  const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>AI 회의실 · ${topic}</title>
-<style>body{font-family:sans-serif;background:#0c0d11;color:#dde1f0;max-width:820px;margin:48px auto;padding:0 24px;line-height:1.7}
-h1{font-size:20px;font-weight:700}h2{font-size:13px;font-weight:700;color:#7880a0;text-transform:uppercase;letter-spacing:.08em;margin:28px 0 10px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,.06)}
-h3{font-size:12px;color:#3a3f5c;margin:14px 0 7px}.pb{margin-bottom:11px}.pn{font-size:12px;font-weight:700;margin-bottom:4px}
-.pt{background:#11131a;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 13px;font-size:12px;color:#7880a0}
-.meta{font-size:11px;color:#3a3f5c;margin:6px 0 32px}.fg{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.06)}
-.fi{background:#11131a;padding:13px 16px}.fit{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}.fib{font-size:12px;color:#7880a0;line-height:1.75}
+  const roundsHTML = rs.map(r=>{
+    const ri=getRoundInfo(r);
+    return `<h3>${ri.label}</h3>${steps.filter(s=>s.round===r&&!s.isFinal).map(s=>`<div class="pb"><div class="pn" style="color:${AI_HEX[s.aiId]||'#444'}">${AI[s.aiId].emoji} ${AI[s.aiId].name}</div><div class="pt">${htmlEsc(s.response||'(미입력)')}</div></div>`).join('')}`;
+  }).join('');
+  const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>AI 회의실 v11.2 · ${escRaw(topic)}</title>
+<style>body{font-family:sans-serif;background:#f5f4f0;color:#1a1c22;max-width:820px;margin:48px auto;padding:0 24px;line-height:1.7}
+h1{font-size:20px;font-weight:700}h2{font-size:13px;font-weight:700;color:#52556a;text-transform:uppercase;letter-spacing:.08em;margin:28px 0 10px;padding-bottom:7px;border-bottom:1px solid rgba(0,0,0,0.1)}
+h3{font-size:12px;color:#9296aa;margin:14px 0 7px}.pb{margin-bottom:11px}.pn{font-size:12px;font-weight:700;margin-bottom:4px}
+.pt{background:#ffffff;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:10px 13px;font-size:12px;color:#52556a}
+.meta{font-size:11px;color:#9296aa;margin:6px 0 32px}.fg{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,0,0,0.08)}
+.fi{background:#ffffff;padding:13px 16px}.fit{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}.fib{font-size:12px;color:#52556a;line-height:1.75}
 </style></head><body>
-<h1>🏛 AI 회의실 v7</h1>
-<div class="meta">주제: ${topic} | 유형: ${PRESET_CONTEXT[activePreset]} | ${date} | ${selectedAIs.map(id=>AI[id].name).join(' · ')}</div>
+<h1>🏛 AI 회의실 v11.2</h1>
+<div class="meta">주제: ${escRaw(topic)} | 유형: ${getPresetContext()} | ${date} | ${selectedAIs.map(id=>AI[id].name).join(' · ')}<br>합의율은 통계 계산값이 아니라 최종 요약 AI의 해석 기반 참고 지표입니다.</div>
 <h2>라운드별 토론</h2>${roundsHTML}
-<h2>실전 판단 요약</h2>
-<div class="fg">${['지금당장','하지말것','확신영역','불확실영역','재검토시점','다음버전개선'].map(k=>`<div class="fi"><div class="fit">${k}</div><div class="fib">${(finalData[k]||'—').replace(/\n/g,'<br>')}</div></div>`).join('')}</div>
-<div class="toast" id="toast"></div>
+<h2>최종 결론 요약</h2>
+<div class="fg">${getFinalDisplayKeys().slice(0,8).map(k=>`<div class="fi"><div class="fit">${htmlEsc(k)}</div><div class="fib">${htmlEsc(finalData[k]||'—')}</div></div>`).join('') || `<div class="fi"><div class="fit">전체</div><div class="fib">${htmlEsc(finalData['전체']||'—')}</div></div>`}</div>
 </body></html>`;
-  dl(`AI회의실_${topic.slice(0,15)}_${date}.html`, html, 'text/html;charset=utf-8');
+  dl(`AI회의실_v11_2_${topic.slice(0,15)}_${date}.html`, html, 'text/html;charset=utf-8');
 }
 </script>
 <div class="toast" id="toast"></div>
